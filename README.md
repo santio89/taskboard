@@ -55,7 +55,7 @@ npm run dev
 
 ## Testing
 
-49 tests across 5 test suites covering:
+Test suites cover:
 
 - **Task store** — CRUD operations, reordering, column deletion, corrupted data handling
 - **Column store** — CRUD operations, reordering, defaults, corrupted data handling
