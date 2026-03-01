@@ -190,6 +190,8 @@ body {
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  padding-bottom: 16px;
+  box-sizing: border-box;
 }
 
 /* ============================================
@@ -425,6 +427,7 @@ body {
    ============================================ */
 .board-container {
   flex: 1;
+  min-height: 0;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 24px;
