@@ -434,15 +434,23 @@ export default function App() {
       const target = e.target as HTMLElement;
       const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable;
 
-      if (e.key === 'Escape' && isAnyModalOpen()) {
-        setTaskModalOpen(false);
-        setEditingTask(null);
-        setColumnModalOpen(false);
-        setEditingColumn(null);
-        setPresetsModalOpen(false);
-        setAnalyticsOpen(false);
-        setConfirmState((s) => ({ ...s, open: false }));
-        return;
+      if (e.key === 'Escape') {
+        if (isAnyModalOpen()) {
+          setTaskModalOpen(false);
+          setEditingTask(null);
+          setColumnModalOpen(false);
+          setEditingColumn(null);
+          setPresetsModalOpen(false);
+          setAnalyticsOpen(false);
+          setConfirmState((s) => ({ ...s, open: false }));
+          return;
+        }
+        if (searchExpanded) {
+          setSearch('');
+          setSearchExpanded(false);
+          (target as HTMLElement).blur?.();
+          return;
+        }
       }
 
       if (isAnyModalOpen() || isInput) return;
@@ -462,7 +470,7 @@ export default function App() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [taskModalOpen, columnModalOpen, presetsModalOpen, confirmState.open, analyticsOpen, columns, toggleTheme]);
+  }, [taskModalOpen, columnModalOpen, presetsModalOpen, confirmState.open, analyticsOpen, searchExpanded, columns, toggleTheme]);
 
   return (
     <div className="app">
