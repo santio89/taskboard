@@ -6,7 +6,7 @@
 }
 
 :root,
-[data-theme='light'] {
+[data-theme="light"] {
   --bg-primary: #f5f5f7;
   --bg-secondary: #ffffff;
   --bg-tertiary: #f0f0f2;
@@ -50,7 +50,7 @@
   --scrollbar-track: transparent;
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --bg-primary: #050505;
   --bg-secondary: #0e0e10;
   --bg-tertiary: #0e0e10;
@@ -117,7 +117,7 @@ html {
   color-scheme: dark;
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
   color-scheme: light;
 }
 
@@ -131,7 +131,10 @@ html {
   opacity: 1;
 }
 
-input, textarea, select, button {
+input,
+textarea,
+select,
+button {
   color: inherit;
   font: inherit;
 }
@@ -147,11 +150,19 @@ textarea:focus-visible {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
 }
 
 * {
@@ -210,7 +221,9 @@ body {
   flex-shrink: 0;
   z-index: 10;
   overflow: visible;
-  transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease);
+  transition:
+    background-color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
 }
 
 .header-left {
@@ -242,7 +255,10 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 20px;
   white-space: nowrap;
-  transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
 }
 
 /* ============================================
@@ -276,7 +292,12 @@ body {
   position: relative;
   opacity: 1;
   transform: scale(1);
-  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease), background-color 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+  transition:
+    opacity 0.2s var(--ease),
+    transform 0.2s var(--ease),
+    background-color 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 
 .search-toggle.search-toggle-hidden {
@@ -308,7 +329,7 @@ body {
 }
 
 .search-toggle.has-filter::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -2px;
   right: -2px;
@@ -325,7 +346,10 @@ body {
   max-width: 0;
   opacity: 0;
   overflow: hidden;
-  transition: max-width 0.3s var(--ease-out), flex 0.3s var(--ease-out), opacity 0.2s var(--ease);
+  transition:
+    max-width 0.3s var(--ease-out),
+    flex 0.3s var(--ease-out),
+    opacity 0.2s var(--ease);
 }
 
 .search-input-wrap.search-input-visible {
@@ -354,7 +378,10 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   outline: none;
-  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), background-color 0.3s var(--ease);
+  transition:
+    border-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease),
+    background-color 0.3s var(--ease);
 }
 
 .search-input:focus {
@@ -404,7 +431,11 @@ body {
   background: var(--card-bg);
   color: var(--text-tertiary);
   cursor: pointer;
-  transition: background-color 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease), transform 0.15s var(--ease);
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    transform 0.15s var(--ease);
 }
 
 .filter-pill:hover {
@@ -501,7 +532,12 @@ body {
   background: var(--column-bg);
   border-radius: 14px;
   border: 1px solid var(--border-color);
-  transition: transform 200ms cubic-bezier(0.22, 0.68, 0, 1), border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease, background-color 0.3s ease;
+  transition:
+    transform 200ms cubic-bezier(0.22, 0.68, 0, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.2s ease,
+    background-color 0.3s ease;
 }
 
 .kanban-column.column-dragging {
@@ -543,7 +579,9 @@ body {
   background: none;
   border: none;
   border-radius: 4px;
-  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease);
   opacity: 0.4;
 }
 
@@ -591,7 +629,9 @@ body {
   border-radius: 8px;
   min-width: 20px;
   text-align: center;
-  transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
 }
 
 .column-collapse-btn {
@@ -605,7 +645,9 @@ body {
   border-radius: 4px;
   color: var(--text-tertiary);
   cursor: pointer;
-  transition: transform 0.2s var(--ease), color 0.2s var(--ease);
+  transition:
+    transform 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 
 .column-collapse-btn:hover {
@@ -620,7 +662,11 @@ body {
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  transition: height 0.3s var(--ease-out), opacity 0.25s var(--ease), flex 0.3s var(--ease-out), min-height 0.3s var(--ease-out);
+  transition:
+    height 0.3s var(--ease-out),
+    opacity 0.25s var(--ease),
+    flex 0.3s var(--ease-out),
+    min-height 0.3s var(--ease-out);
 }
 
 .column-body.collapsed {
@@ -653,7 +699,9 @@ body {
   background: var(--bg-hover);
   opacity: 0.5;
   margin-top: 2px;
-  transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
 }
 
 /* ============================================
@@ -667,11 +715,16 @@ body {
   cursor: default;
   box-shadow: var(--shadow-sm);
   position: relative;
-  transition: transform 200ms cubic-bezier(0.22, 0.68, 0, 1), border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, translate 0.2s cubic-bezier(0.22, 0.68, 0, 1);
+  transition:
+    transform 200ms cubic-bezier(0.22, 0.68, 0, 1),
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    opacity 0.2s ease,
+    translate 0.2s cubic-bezier(0.22, 0.68, 0, 1);
 }
 
 .task-card::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
@@ -728,7 +781,9 @@ body {
   background: none;
   border: none;
   border-radius: 4px;
-  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease);
   opacity: 0.5;
 }
 
@@ -778,7 +833,7 @@ body {
 }
 
 .task-description code {
-  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-family: "SF Mono", "Fira Code", monospace;
   font-size: 0.75rem;
   background: var(--bg-hover);
   padding: 1px 4px;
@@ -892,7 +947,9 @@ body {
   border-radius: 6px;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 
 .icon-btn:hover {
@@ -997,7 +1054,10 @@ body {
   border-radius: 8px;
   background: var(--bg-primary);
   color: var(--text-primary);
-  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), background-color 0.3s var(--ease);
+  transition:
+    border-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease),
+    background-color 0.3s var(--ease);
   outline: none;
 }
 
@@ -1005,7 +1065,9 @@ body {
 .form-group textarea:not(.subtask-edit-input):focus,
 .form-group select:focus {
   border-color: transparent;
-  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), linear-gradient(135deg, #d8b4fe, #9333ea, #581c87);
+  background-image:
+    linear-gradient(var(--bg-primary), var(--bg-primary)),
+    linear-gradient(135deg, #d8b4fe, #9333ea, #581c87);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
@@ -1139,7 +1201,9 @@ body {
   height: 0;
   overflow: hidden;
   opacity: 0;
-  transition: height 0.3s var(--ease-out), opacity 0.25s var(--ease);
+  transition:
+    height 0.3s var(--ease-out),
+    opacity 0.25s var(--ease);
 }
 
 .advanced-section.open {
@@ -1177,7 +1241,13 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s var(--ease), color 0.2s var(--ease), box-shadow 0.2s var(--ease), opacity 0.2s var(--ease), border-color 0.2s var(--ease), transform 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease),
+    opacity 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    transform 0.2s var(--ease);
 }
 
 .btn-primary {
@@ -1261,7 +1331,9 @@ body {
   border-radius: 8px;
   border: 2px solid transparent;
   cursor: pointer;
-  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease-out);
+  transition:
+    border-color 0.2s var(--ease),
+    transform 0.2s var(--ease-out);
 }
 
 .color-swatch:hover {
@@ -1270,7 +1342,9 @@ body {
 
 .color-swatch.selected {
   border-color: var(--text-primary);
-  box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--text-tertiary);
+  box-shadow:
+    0 0 0 2px var(--bg-primary),
+    0 0 0 4px var(--text-tertiary);
 }
 
 .custom-color-swatch {
@@ -1280,6 +1354,10 @@ body {
   color: rgba(255, 255, 255, 0.85);
   position: relative;
   cursor: pointer;
+}
+
+.custom-color-swatch svg {
+  fill: var(--bg-secondary);
 }
 
 .color-input-hidden {
@@ -1481,7 +1559,9 @@ label.attachment-drop-zone.drag-over {
 
 label.attachment-drop-zone.drag-over {
   border-style: solid;
-  box-shadow: 0 0 0 1px var(--accent), 0 0 12px var(--accent-glow);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 12px var(--accent-glow);
 }
 
 .attachment-list {
@@ -1610,7 +1690,12 @@ label.attachment-drop-zone.drag-over {
   border: 1px solid var(--border-color);
   font-size: 0.84rem;
   touch-action: none;
-  transition: transform 200ms cubic-bezier(0.22, 0.68, 0, 1), border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+  transition:
+    transform 200ms cubic-bezier(0.22, 0.68, 0, 1),
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .subtask-item:hover {
@@ -1636,7 +1721,9 @@ label.attachment-drop-zone.drag-over {
   padding: 2px;
   flex-shrink: 0;
   border-radius: 4px;
-  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease);
 }
 
 .subtask-drag-handle:hover {
@@ -1665,7 +1752,10 @@ label.attachment-drop-zone.drag-over {
   cursor: pointer;
   flex-shrink: 0;
   color: transparent;
-  transition: background 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 
 .subtask-check:hover {
@@ -1721,7 +1811,9 @@ label.attachment-drop-zone.drag-over {
   padding: 4px;
   border-radius: 5px;
   color: var(--text-tertiary);
-  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+  transition:
+    color 0.2s var(--ease),
+    background 0.2s var(--ease);
 }
 
 .subtask-action-btn:hover {
@@ -1764,7 +1856,9 @@ label.attachment-drop-zone.drag-over {
   border-radius: 10px;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease);
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease);
 }
 
 .stat-card:hover {
@@ -1982,8 +2076,12 @@ label.attachment-drop-zone.drag-over {
    Animations
    ============================================ */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
@@ -2018,7 +2116,10 @@ label.attachment-drop-zone.drag-over {
   background: var(--bg-primary);
   color: var(--text-primary);
   cursor: pointer;
-  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), background-color 0.3s var(--ease);
+  transition:
+    border-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease),
+    background-color 0.3s var(--ease);
   outline: none;
   text-align: left;
 }
@@ -2029,7 +2130,9 @@ label.attachment-drop-zone.drag-over {
 
 .custom-select-trigger.open {
   border-color: transparent;
-  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), linear-gradient(135deg, #d8b4fe, #9333ea, #581c87);
+  background-image:
+    linear-gradient(var(--bg-primary), var(--bg-primary)),
+    linear-gradient(135deg, #d8b4fe, #9333ea, #581c87);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
@@ -2066,7 +2169,9 @@ label.attachment-drop-zone.drag-over {
   border-radius: 6px;
   cursor: pointer;
   color: var(--text-secondary);
-  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
 }
 
 .custom-select-option:hover {
@@ -2103,7 +2208,9 @@ label.attachment-drop-zone.drag-over {
   border-radius: 6px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+  transition:
+    opacity 0.2s var(--ease),
+    transform 0.2s var(--ease);
   z-index: 200;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
@@ -2143,9 +2250,15 @@ label.attachment-drop-zone.drag-over {
   animation: toastIn 0.25s var(--ease-out);
 }
 
-.toast-error .toast-icon { color: var(--danger); }
-.toast-success .toast-icon { color: #10b981; }
-.toast-info .toast-icon { color: var(--accent); }
+.toast-error .toast-icon {
+  color: var(--danger);
+}
+.toast-success .toast-icon {
+  color: #10b981;
+}
+.toast-info .toast-icon {
+  color: var(--accent);
+}
 
 .toast-icon {
   flex-shrink: 0;
@@ -2336,7 +2449,9 @@ label.attachment-drop-zone.drag-over {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.2s !important;
   }
 }
