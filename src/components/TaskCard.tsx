@@ -30,14 +30,13 @@ export function TaskCard({ task, highlightColor, onEdit, onDelete }: TaskCardPro
     return () => { cancelled = true; };
   }, [task.id, task]);
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
     id: task.id,
     data: { type: 'task', task },
   });
 
   const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition: transition ?? 'transform 200ms cubic-bezier(0.22, 0.68, 0, 1)',
+    transform: CSS.Translate.toString(transform) ?? 'translate3d(0, 0, 0)',
     opacity: isDragging ? 0.4 : 1,
     ...(highlightColor ? {
       borderColor: highlightColor,

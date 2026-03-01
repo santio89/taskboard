@@ -84,7 +84,7 @@ export default function App() {
   );
 
   const dropAnimation: DropAnimation = {
-    duration: 200,
+    duration: 250,
     easing: 'cubic-bezier(0.22, 0.68, 0, 1)',
   };
 
@@ -315,15 +315,24 @@ export default function App() {
 
     if (!targetColumnId || activeTaskData.columnId === targetColumnId) return;
 
+    const overTask = tasks.find((t) => t.id === overId);
+
     setTasks((prev) => {
-      const updated = prev.map((t) =>
-        t.id === activeId ? { ...t, columnId: targetColumnId! } : t,
-      );
-      const colTasks = updated
+      const without = prev.filter((t) => t.id !== activeId);
+      const colTasks = without
         .filter((t) => t.columnId === targetColumnId)
         .sort((a, b) => a.order - b.order);
+
+      const overIndex = overTask
+        ? colTasks.findIndex((t) => t.id === overTask.id)
+        : colTasks.length;
+      const insertAt = overIndex === -1 ? colTasks.length : overIndex;
+
+      colTasks.splice(insertAt, 0, { ...activeTaskData, columnId: targetColumnId! });
       colTasks.forEach((t, i) => (t.order = i));
-      return updated;
+
+      const otherTasks = without.filter((t) => t.columnId !== targetColumnId);
+      return [...otherTasks, ...colTasks];
     });
   };
 
@@ -472,7 +481,7 @@ export default function App() {
             <rect x="13.5" y="6" width="5" height="20" rx="1.5" fill="white"/>
             <rect x="21" y="10" width="5" height="14" rx="1.5" fill="white" opacity="0.9"/>
           </svg>
-          <h1>Tasks Board</h1>
+          <h1>TASKBOARD</h1>
         </div>
         <SearchBar
           search={search}
@@ -534,7 +543,7 @@ export default function App() {
               items={columns.map((c) => `column-${c.id}`)}
               strategy={horizontalListSortingStrategy}
             >
-              <div className="board">
+              <div className={`board${activeTask || activeColumn ? ' board-dragging' : ''}`}>
                 {columns.map((column) => (
                   <KanbanColumn
                     key={column.id}

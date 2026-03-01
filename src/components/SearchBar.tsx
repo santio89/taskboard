@@ -28,37 +28,36 @@ export function SearchBar({ search, onSearchChange, priorityFilter, onPriorityFi
 
   return (
     <div className={`search-bar ${expanded ? 'expanded' : ''}`}>
-      {!expanded && (
+      <button
+        className={`search-toggle ${search || priorityFilter ? 'has-filter' : ''} ${expanded ? 'search-toggle-hidden' : ''}`}
+        onClick={() => onExpandedChange(true)}
+        aria-label="Open search"
+        tabIndex={expanded ? -1 : 0}
+      >
+        <Search size={16} />
+      </button>
+      <div className={`search-input-wrap ${expanded ? 'search-input-visible' : ''}`}>
+        <Search size={15} className="search-icon" />
+        <input
+          ref={inputRef}
+          type="text"
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
+          onBlur={handleCollapse}
+          placeholder="Search tasks..."
+          className="search-input"
+          tabIndex={expanded ? 0 : -1}
+        />
         <button
-          className={`search-toggle ${search || priorityFilter ? 'has-filter' : ''}`}
-          onClick={() => onExpandedChange(true)}
-          aria-label="Open search"
+          className="search-clear"
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => { onSearchChange(''); onExpandedChange(false); }}
+          aria-label="Close search"
+          tabIndex={expanded ? 0 : -1}
         >
-          <Search size={16} />
+          <X size={14} />
         </button>
-      )}
-      {expanded && (
-        <div className="search-input-wrap">
-          <Search size={15} className="search-icon" />
-          <input
-            ref={inputRef}
-            type="text"
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            onBlur={handleCollapse}
-            placeholder="Search tasks..."
-            className="search-input"
-          />
-          <button
-            className="search-clear"
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => { onSearchChange(''); onExpandedChange(false); }}
-            aria-label="Close search"
-          >
-            <X size={14} />
-          </button>
-        </div>
-      )}
+      </div>
       <div className="filter-pills">
         {(['', 'high', 'medium', 'low'] as const).map((p) => (
           <button

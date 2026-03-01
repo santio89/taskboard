@@ -1,10 +1,78 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Task, Priority, Column, Subtask } from '../types';
-import { X, Plus, FileText, Image, Film, Music, File, Download, Trash2, Check, ChevronDown } from 'lucide-react';
+import { X, Plus, FileText, Image, Film, Music, File, Download, Trash2, Check, ChevronDown, GripVertical, Pencil } from 'lucide-react';
 import { CustomSelect } from './CustomSelect';
 import type { AttachmentMeta } from '../store/attachmentStore';
 import * as attachmentStore from '../store/attachmentStore';
 import { v4 as uuidv4 } from 'uuid';
+import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
+
+function SortableSubtaskItem({ subtask, onToggle, onRemove, onEdit }: { subtask: Subtask; onToggle: (id: string) => void; onRemove: (id: string) => void; onEdit: (id: string, title: string) => void }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({ id: subtask.id });
+  const [editing, setEditing] = useState(false);
+  const [editValue, setEditValue] = useState(subtask.title);
+  const editRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing) editRef.current?.focus();
+  }, [editing]);
+
+  const commitEdit = () => {
+    const trimmed = editValue.trim();
+    if (trimmed && trimmed !== subtask.title) {
+      onEdit(subtask.id, trimmed);
+    } else {
+      setEditValue(subtask.title);
+    }
+    setEditing(false);
+  };
+
+  const style = {
+    transform: CSS.Translate.toString(transform) ?? 'translate3d(0, 0, 0)',
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className={`subtask-item ${subtask.done ? 'done' : ''} ${isDragging ? 'dragging' : ''}`}>
+      <button type="button" className="subtask-drag-handle" {...attributes} {...listeners}>
+        <GripVertical size={14} />
+      </button>
+      <button type="button" className={`subtask-check ${subtask.done ? 'checked' : ''}`} onClick={() => onToggle(subtask.id)}>
+        {subtask.done && <Check size={12} />}
+      </button>
+      {editing ? (
+        <input
+          ref={editRef}
+          type="text"
+          className="subtask-edit-input"
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+          onBlur={commitEdit}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') commitEdit();
+            if (e.key === 'Escape') { setEditValue(subtask.title); setEditing(false); }
+          }}
+        />
+      ) : (
+        <span className="subtask-title" onDoubleClick={() => setEditing(true)}>{subtask.title}</span>
+      )}
+      <div className="subtask-actions">
+        {!editing && (
+          <button type="button" className="icon-btn subtask-action-btn" onClick={() => setEditing(true)} aria-label="Edit subtask">
+            <Pencil size={12} />
+          </button>
+        )}
+        <button type="button" className="icon-btn subtask-action-btn danger" onClick={() => onRemove(subtask.id)} aria-label="Remove subtask">
+          <X size={12} />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -190,6 +258,26 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
     setSubtasks((prev) => prev.filter((s) => s.id !== id));
   };
 
+  const editSubtask = (id: string, newTitle: string) => {
+    setSubtasks((prev) => prev.map((s) => s.id === id ? { ...s, title: newTitle } : s));
+  };
+
+  const subtaskSensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(KeyboardSensor),
+  );
+
+  const handleSubtaskDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setSubtasks((prev) => {
+        const oldIndex = prev.findIndex((s) => s.id === active.id);
+        const newIndex = prev.findIndex((s) => s.id === over.id);
+        return arrayMove(prev, oldIndex, newIndex);
+      });
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -221,7 +309,6 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Add details..."
-              rows={3}
             />
           </div>
 
@@ -380,19 +467,20 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
                   <button type="button" className="btn btn-secondary" onClick={handleAddSubtask}>Add</button>
                 </div>
                 {subtasks.length > 0 && (
-                  <div className="subtask-list">
-                    {subtasks.map((s) => (
-                      <div key={s.id} className={`subtask-item ${s.done ? 'done' : ''}`}>
-                        <button type="button" className={`subtask-check ${s.done ? 'checked' : ''}`} onClick={() => toggleSubtask(s.id)}>
-                          {s.done && <Check size={12} />}
-                        </button>
-                        <span className="subtask-title">{s.title}</span>
-                        <button type="button" className="icon-btn danger" onClick={() => removeSubtask(s.id)} aria-label="Remove subtask">
-                          <X size={12} />
-                        </button>
+                  <DndContext
+                    sensors={subtaskSensors}
+                    collisionDetection={closestCenter}
+                    modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+                    onDragEnd={handleSubtaskDragEnd}
+                  >
+                    <SortableContext items={subtasks.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+                      <div className="subtask-list">
+                        {subtasks.map((s) => (
+                          <SortableSubtaskItem key={s.id} subtask={s} onToggle={toggleSubtask} onRemove={removeSubtask} onEdit={editSubtask} />
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </SortableContext>
+                  </DndContext>
                 )}
               </div>
             </div>

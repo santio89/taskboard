@@ -1,4 +1,4 @@
-# Tasks Board
+# TASKBOARD
 
 A Kanban-style task dashboard built with React, TypeScript, and Vite. Fully client-side with local persistence — no backend required.
 
@@ -9,7 +9,7 @@ A Kanban-style task dashboard built with React, TypeScript, and Vite. Fully clie
 - **Task management** — create, edit, and delete tasks with title, description, priority levels, and tags
 - **Start & due dates** — set date ranges with color-coded indicators (green = upcoming, yellow = soon, red = overdue)
 - **Time estimates** — track estimated effort per task (e.g. 2h, 1d, 30m)
-- **Subtasks / checklists** — add subtasks to any task with progress tracking on the card
+- **Subtasks / checklists** — add, edit, reorder (drag & drop), and check off subtasks with progress tracking on the card
 - **File attachments** — attach files to tasks via click or drag-and-drop, stored in IndexedDB
 - **Analytics dashboard** — SVG charts for task distribution, priority breakdown, creation timeline, and top tags
 - **Search & filter** — expandable search bar with priority filter pills
@@ -18,7 +18,7 @@ A Kanban-style task dashboard built with React, TypeScript, and Vite. Fully clie
 - **Keyboard shortcuts** — `N` new task, `T` toggle theme, `/` focus search, `Esc` close modals
 - **Export / Import** — download your board as JSON and re-import it anytime
 - **Confetti** — micro-animation when a task moves to a "Done"-type column
-- **Markdown** — supports bold, italic, code, strikethrough, and links in task descriptions
+- **Markdown** — supports bold, italic, code, strikethrough, and links in task descriptions (line breaks preserved on cards)
 - **Delete confirmations** — themed confirm dialog before deleting tasks or columns
 - **Toast notifications** — custom themed toasts for import success/error feedback
 - **Error boundary** — graceful error recovery with a themed fallback UI

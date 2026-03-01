@@ -113,4 +113,33 @@ describe('taskStore', () => {
     localStorage.setItem('kanban-tasks', '"a string"');
     expect(taskStore.getTasks()).toEqual([]);
   });
+
+  it('updates subtasks on an existing task', () => {
+    const task = taskStore.addTask('With Subtasks', '', 'medium', 'col-1');
+    const subtasks = [
+      { id: 'sub-1', title: 'First', done: false },
+      { id: 'sub-2', title: 'Second', done: true },
+    ];
+    const updated = taskStore.updateTask(task.id, { subtasks });
+    expect(updated!.subtasks).toHaveLength(2);
+    expect(updated!.subtasks![1].done).toBe(true);
+  });
+
+  it('moves a task between columns', () => {
+    const task = taskStore.addTask('Movable', '', 'low', 'col-1');
+    const updated = taskStore.updateTask(task.id, { columnId: 'col-2' });
+    expect(updated!.columnId).toBe('col-2');
+    expect(taskStore.getTasksByColumn('col-1')).toHaveLength(0);
+    expect(taskStore.getTasksByColumn('col-2')).toHaveLength(1);
+  });
+
+  it('preserves unrelated tasks when deleting by column', () => {
+    taskStore.addTask('Keep A', '', 'low', 'col-1');
+    taskStore.addTask('Delete B', '', 'high', 'col-2');
+    taskStore.addTask('Keep C', '', 'medium', 'col-3');
+    taskStore.deleteTasksByColumn('col-2');
+    const remaining = taskStore.getTasks();
+    expect(remaining).toHaveLength(2);
+    expect(remaining.map((t) => t.title).sort()).toEqual(['Keep A', 'Keep C']);
+  });
 });

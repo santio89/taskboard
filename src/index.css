@@ -195,13 +195,17 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 28px;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
+  padding: 10px 28px;
+  background: var(--column-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  margin: 12px 16px 0;
   flex-shrink: 0;
   z-index: 10;
   overflow: visible;
-  transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease);
+  transition: background-color 0.3s var(--ease);
 }
 
 .header-left {
@@ -285,7 +289,21 @@ body {
   background: var(--bg-secondary);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s var(--ease);
+  position: relative;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease), background-color 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.search-toggle.search-toggle-hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  width: 0;
+  overflow: hidden;
+  pointer-events: none;
+  padding: 0;
+  border-width: 0;
+  margin: 0;
 }
 
 .search-toggle:hover {
@@ -311,13 +329,19 @@ body {
   border: 2px solid var(--bg-secondary);
 }
 
-.search-toggle {
-  position: relative;
-}
-
 .search-input-wrap {
   position: relative;
+  flex: 0 0 0px;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-width 0.3s var(--ease-out), flex 0.3s var(--ease-out), opacity 0.2s var(--ease);
+}
+
+.search-input-wrap.search-input-visible {
   flex: 1;
+  max-width: 480px;
+  opacity: 1;
 }
 
 .search-icon {
@@ -362,7 +386,7 @@ body {
   border-radius: 50%;
   color: var(--text-tertiary);
   cursor: pointer;
-  transition: all 0.15s var(--ease);
+  transition: all 0.2s var(--ease);
 }
 
 .search-clear:hover {
@@ -389,7 +413,7 @@ body {
   background: transparent;
   color: var(--text-tertiary);
   cursor: pointer;
-  transition: all 0.15s var(--ease);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
 }
 
 .filter-pill:hover {
@@ -486,21 +510,22 @@ body {
   background: var(--column-bg);
   border-radius: 14px;
   border: 1px solid var(--border-color);
-  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease), opacity 0.2s var(--ease), transform 0.2s var(--ease-out), background-color 0.3s var(--ease);
+  transition: transform 200ms cubic-bezier(0.22, 0.68, 0, 1), border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease, background-color 0.3s ease;
 }
 
 .kanban-column.column-dragging {
   opacity: 0.4;
+  will-change: transform;
 }
 
 .kanban-column.column-overlay {
   box-shadow: var(--shadow-drag);
   border-color: var(--accent);
   min-height: 120px;
+  will-change: transform;
 }
 
 .kanban-column.column-over {
-  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
 }
 
 .column-header {
@@ -529,7 +554,7 @@ body {
   background: none;
   border: none;
   border-radius: 4px;
-  transition: color 0.15s var(--ease), background 0.15s var(--ease);
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
   opacity: 0.4;
 }
 
@@ -591,7 +616,7 @@ body {
   border-radius: 4px;
   color: var(--text-tertiary);
   cursor: pointer;
-  transition: transform 0.2s var(--ease), color 0.15s var(--ease);
+  transition: transform 0.2s var(--ease), color 0.2s var(--ease);
 }
 
 .column-collapse-btn:hover {
@@ -608,7 +633,7 @@ body {
   padding: 10px 10px 14px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   min-height: 60px;
 }
 
@@ -636,22 +661,50 @@ body {
   border-radius: 10px;
   padding: 12px 14px;
   cursor: default;
-  transition: box-shadow 0.2s var(--ease), border-color 0.2s var(--ease), transform 0.15s var(--ease-out), background-color 0.3s var(--ease);
   box-shadow: var(--shadow-sm);
   position: relative;
+  transition: transform 200ms cubic-bezier(0.22, 0.68, 0, 1), border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, translate 0.2s cubic-bezier(0.22, 0.68, 0, 1);
+}
+
+.task-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transition: opacity 0.2s var(--ease);
+  pointer-events: none;
 }
 
 .task-card:hover {
   border-color: var(--border-hover);
-  box-shadow: var(--shadow-md);
   background: var(--bg-hover);
-  transform: translateY(-2px);
+  translate: 0 -2px;
+}
+
+.task-card:hover::after {
+  opacity: 1;
+}
+
+.board-dragging .task-card:hover {
+  border-color: var(--border-color);
+  background: var(--card-bg);
+  translate: none;
+}
+
+.board-dragging .task-card:hover::after {
+  opacity: 0;
 }
 
 .task-card.dragging {
-  box-shadow: var(--shadow-drag);
-  transform: rotate(3deg) scale(1.02);
   border-color: var(--accent);
+  translate: none;
+}
+
+.task-card.dragging::after {
+  box-shadow: var(--shadow-drag);
+  opacity: 1;
 }
 
 .task-card-header {
@@ -671,7 +724,7 @@ body {
   background: none;
   border: none;
   border-radius: 4px;
-  transition: color 0.15s var(--ease), background 0.15s var(--ease);
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
   opacity: 0.5;
 }
 
@@ -692,7 +745,7 @@ body {
   display: flex;
   gap: 1px;
   opacity: 0;
-  transition: opacity 0.15s var(--ease);
+  transition: opacity 0.2s var(--ease);
 }
 
 .task-card:hover .task-card-actions {
@@ -717,6 +770,7 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  white-space: pre-line;
 }
 
 .task-description code {
@@ -804,7 +858,7 @@ body {
   background: var(--accent);
   color: #ffffff;
   border-radius: 5px;
-  transition: opacity 0.15s var(--ease);
+  transition: opacity 0.2s var(--ease);
 }
 
 .tag.removable:hover {
@@ -834,7 +888,7 @@ body {
   border-radius: 6px;
   color: var(--text-tertiary);
   cursor: pointer;
-  transition: all 0.15s var(--ease);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
 }
 
 .icon-btn:hover {
@@ -877,7 +931,7 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 100;
-  animation: fadeIn 0.15s var(--ease);
+  animation: fadeIn 0.2s var(--ease);
   backdrop-filter: blur(8px);
 }
 
@@ -887,7 +941,7 @@ body {
   border-radius: 16px;
   padding: 32px;
   width: 100%;
-  max-width: 560px;
+  max-width: 660px;
   min-height: 520px;
   max-height: 90vh;
   overflow-y: auto;
@@ -929,7 +983,7 @@ body {
 }
 
 .form-group input,
-.form-group textarea,
+.form-group textarea:not(.subtask-edit-input),
 .form-group select {
   width: 100%;
   padding: 9px 12px;
@@ -944,7 +998,7 @@ body {
 }
 
 .form-group input:focus,
-.form-group textarea:focus,
+.form-group textarea:not(.subtask-edit-input):focus,
 .form-group select:focus {
   border-color: transparent;
   background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), linear-gradient(135deg, #d8b4fe, #9333ea, #581c87);
@@ -974,9 +1028,13 @@ body {
   margin-top: 5px;
 }
 
-.form-group textarea {
-  resize: vertical;
-  min-height: 80px;
+.form-group textarea:not(.subtask-edit-input) {
+  field-sizing: content;
+  resize: none;
+  line-height: 1.5;
+  min-height: calc(3 * 1.5em + 22px);
+  max-height: calc(6 * 1.5em + 22px);
+  overflow-y: auto;
 }
 
 /* Date input theming */
@@ -993,7 +1051,7 @@ body {
   padding: 4px;
   opacity: 0.5;
   filter: var(--date-icon-filter, none);
-  transition: opacity 0.15s var(--ease);
+  transition: opacity 0.2s var(--ease);
 }
 
 .form-group input[type="date"]::-webkit-calendar-picker-indicator:hover {
@@ -1044,18 +1102,17 @@ body {
   gap: 6px;
   padding: 10px 0 8px;
   margin-top: 4px;
-  border-top: 1px solid var(--border-color);
+  border: none;
+  border-radius: 10px;
+  outline-offset: 2px;
   font-size: 0.78rem;
   font-weight: 600;
   font-family: inherit;
   color: var(--text-tertiary);
   background: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
   width: 100%;
   cursor: pointer;
-  transition: color 0.15s var(--ease);
+  transition: color 0.2s var(--ease);
 }
 
 .advanced-toggle:hover {
@@ -1075,7 +1132,8 @@ body {
 }
 
 .advanced-section {
-  animation: fadeIn 0.15s var(--ease);
+  margin-top: 12px;
+  animation: fadeIn 0.2s var(--ease);
 }
 
 .modal-actions {
@@ -1102,7 +1160,7 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.15s var(--ease);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), box-shadow 0.2s var(--ease), opacity 0.2s var(--ease);
 }
 
 .btn-primary {
@@ -1161,7 +1219,7 @@ body {
   border-radius: 8px;
   border: 2px solid transparent;
   cursor: pointer;
-  transition: border-color 0.15s var(--ease), transform 0.15s var(--ease-out);
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease-out);
 }
 
 .color-swatch:hover {
@@ -1233,7 +1291,7 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   cursor: pointer;
-  transition: all 0.15s var(--ease);
+  transition: all 0.2s var(--ease);
   font-family: inherit;
   font-size: 0.84rem;
   font-weight: 500;
@@ -1366,7 +1424,7 @@ label.attachment-drop-zone {
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
-  transition: all 0.15s var(--ease);
+  transition: all 0.2s var(--ease);
   text-transform: none;
   letter-spacing: normal;
   margin-bottom: 0;
@@ -1496,39 +1554,80 @@ label.attachment-drop-zone.drag-over {
 .subtask-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-top: 8px;
+  gap: 6px;
+  margin-top: 10px;
 }
 
 .subtask-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 8px;
-  border-radius: 6px;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  font-size: 0.83rem;
+  font-size: 0.84rem;
+  touch-action: none;
+  transition: transform 200ms cubic-bezier(0.22, 0.68, 0, 1), border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.subtask-item:hover {
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--border-color));
+}
+
+.subtask-item.dragging {
+  box-shadow: var(--shadow-drag);
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+  z-index: 10;
+  will-change: transform;
+}
+
+.subtask-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  color: var(--text-tertiary);
+  background: none;
+  border: none;
+  padding: 2px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.subtask-drag-handle:hover {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--text-tertiary) 10%, transparent);
+}
+
+.subtask-drag-handle:active {
+  cursor: grabbing;
 }
 
 .subtask-item.done .subtask-title {
   text-decoration: line-through;
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
 .subtask-check {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
   border: 2px solid var(--border-color);
   background: transparent;
   cursor: pointer;
   flex-shrink: 0;
   color: transparent;
-  transition: all 0.15s var(--ease);
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.subtask-check:hover {
+  border-color: var(--accent);
 }
 
 .subtask-check.checked {
@@ -1540,10 +1639,57 @@ label.attachment-drop-zone.drag-over {
 .subtask-title {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.4;
+  max-height: calc(2 * 1.4em);
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-break: break-word;
   color: var(--text-primary);
+}
+
+.subtask-edit-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.84rem;
+  font-family: inherit;
+  color: var(--text-primary);
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.subtask-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease);
+}
+
+.subtask-item:hover .subtask-actions,
+.subtask-item:has(.subtask-edit-input:focus) .subtask-actions {
+  opacity: 1;
+}
+
+.subtask-action-btn {
+  padding: 4px;
+  border-radius: 5px;
+  color: var(--text-tertiary);
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.subtask-action-btn:hover {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--text-tertiary) 12%, transparent);
+}
+
+.subtask-action-btn.danger:hover {
+  color: var(--priority-high-text);
+  background: color-mix(in srgb, var(--priority-high-text) 12%, transparent);
 }
 
 /* ============================================
@@ -1576,7 +1722,7 @@ label.attachment-drop-zone.drag-over {
   border-radius: 10px;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  transition: transform 0.15s var(--ease-out), box-shadow 0.15s var(--ease);
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease);
 }
 
 .stat-card:hover {
@@ -1915,7 +2061,7 @@ label.attachment-drop-zone.drag-over {
   border-radius: 6px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.15s var(--ease), transform 0.15s var(--ease);
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
   z-index: 200;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
@@ -1981,7 +2127,7 @@ label.attachment-drop-zone.drag-over {
   color: var(--text-tertiary);
   cursor: pointer;
   flex-shrink: 0;
-  transition: all 0.15s var(--ease);
+  transition: all 0.2s var(--ease);
 }
 
 .toast-close:hover {
@@ -2008,6 +2154,8 @@ label.attachment-drop-zone.drag-over {
     flex-wrap: wrap;
     padding: 12px 16px;
     gap: 10px;
+    margin: 10px 12px 0;
+    border-radius: 14px;
   }
 
   .header-left h1 {
@@ -2091,6 +2239,8 @@ label.attachment-drop-zone.drag-over {
 @media (max-width: 480px) {
   .app-header {
     padding: 10px 12px;
+    margin: 8px 8px 0;
+    border-radius: 12px;
   }
 
   .task-count {
@@ -2115,5 +2265,11 @@ label.attachment-drop-zone.drag-over {
 
   .stat-value {
     font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.2s !important;
   }
 }

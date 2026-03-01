@@ -27,7 +27,6 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
     listeners,
     setNodeRef: setSortableRef,
     transform,
-    transition,
     isDragging,
   } = useSortable({
     id: `column-${column.id}`,
@@ -35,8 +34,7 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
   });
 
   const style = {
-    transform: CSS.Translate.toString(transform),
-    transition: transition ?? 'transform 200ms cubic-bezier(0.22, 0.68, 0, 1)',
+    transform: CSS.Translate.toString(transform) ?? 'translate3d(0, 0, 0)',
     opacity: isDragging ? 0.4 : 1,
     ...(isDragging ? {
       borderColor: column.color,
