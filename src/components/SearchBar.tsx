@@ -1,0 +1,75 @@
+import { useRef, useEffect } from 'react';
+import { Search, X } from 'lucide-react';
+import type { Priority } from '../types';
+
+interface SearchBarProps {
+  search: string;
+  onSearchChange: (value: string) => void;
+  priorityFilter: Priority | '';
+  onPriorityFilterChange: (value: Priority | '') => void;
+  expanded: boolean;
+  onExpandedChange: (expanded: boolean) => void;
+}
+
+export function SearchBar({ search, onSearchChange, priorityFilter, onPriorityFilterChange, expanded, onExpandedChange }: SearchBarProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (expanded) {
+      inputRef.current?.focus();
+    }
+  }, [expanded]);
+
+  const handleCollapse = () => {
+    if (!search) {
+      onExpandedChange(false);
+    }
+  };
+
+  return (
+    <div className={`search-bar ${expanded ? 'expanded' : ''}`}>
+      {!expanded && (
+        <button
+          className={`search-toggle ${search || priorityFilter ? 'has-filter' : ''}`}
+          onClick={() => onExpandedChange(true)}
+          aria-label="Open search"
+        >
+          <Search size={16} />
+        </button>
+      )}
+      {expanded && (
+        <div className="search-input-wrap">
+          <Search size={15} className="search-icon" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            onBlur={handleCollapse}
+            placeholder="Search tasks..."
+            className="search-input"
+          />
+          <button
+            className="search-clear"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => { onSearchChange(''); onExpandedChange(false); }}
+            aria-label="Close search"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+      <div className="filter-pills">
+        {(['', 'high', 'medium', 'low'] as const).map((p) => (
+          <button
+            key={p}
+            className={`filter-pill ${priorityFilter === p ? 'active' : ''}`}
+            onClick={() => onPriorityFilterChange(p)}
+          >
+            {p === '' ? 'All' : p.charAt(0).toUpperCase() + p.slice(1)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
