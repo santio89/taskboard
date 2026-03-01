@@ -199,6 +199,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   padding: 10px 28px;
   background: var(--column-bg);
   border: 1px solid var(--border-color);
@@ -238,6 +239,7 @@ body {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 20px;
+  white-space: nowrap;
   transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
 }
 
@@ -247,7 +249,7 @@ body {
 .search-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
   margin: 0 8px;
 }
 
@@ -521,8 +523,6 @@ body {
   justify-content: space-between;
   padding: 14px 14px 10px;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border-color);
-  transition: border-color 0.3s var(--ease);
 }
 
 .column-header-actions {
@@ -615,15 +615,16 @@ body {
 }
 
 .column-body {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  transition: height 0.3s var(--ease-out), opacity 0.25s var(--ease), flex 0.3s var(--ease-out);
+  transition: height 0.3s var(--ease-out), opacity 0.25s var(--ease), flex 0.3s var(--ease-out), min-height 0.3s var(--ease-out);
 }
 
 .column-body.collapsed {
-  flex: 0;
+  flex: 0 0 0px;
   height: 0;
+  min-height: 0;
   opacity: 0;
   pointer-events: none;
 }
@@ -631,6 +632,7 @@ body {
 .column-tasks {
   overflow-y: auto;
   padding: 10px 10px 14px;
+  border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1216,13 +1218,20 @@ body {
   border-radius: 0;
 }
 
+.btn-group .btn + .btn {
+  margin-left: -1px;
+}
+
+.btn-group .btn:hover {
+  z-index: 1;
+}
+
 .btn-group .btn:first-child {
   border-radius: 8px 0 0 8px;
 }
 
 .btn-group .btn:last-child {
   border-radius: 0 8px 8px 0;
-  border-left: none;
 }
 
 .btn-sm {
@@ -1232,6 +1241,7 @@ body {
   align-items: center;
   gap: 5px;
   border-radius: 8px;
+  white-space: nowrap;
 }
 
 /* ============================================
@@ -2179,17 +2189,53 @@ label.attachment-drop-zone.drag-over {
 /* ============================================
    Responsive
    ============================================ */
+@media (max-width: 1024px) {
+  .app-header {
+    padding: 10px 16px;
+  }
+
+  .header-right {
+    gap: 6px;
+  }
+
+  .header-right .btn-sm {
+    padding: 7px 10px;
+    font-size: 0;
+    gap: 0;
+    white-space: nowrap;
+  }
+
+  .header-right .btn-sm svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .search-toggle,
+  .theme-toggle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .task-count {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+  }
+}
+
 @media (max-width: 768px) {
   .app-header {
     flex-wrap: wrap;
     padding: 12px 16px;
-    gap: 10px;
     margin: 10px 12px 0;
     border-radius: 14px;
   }
 
   .header-left h1 {
     font-size: 1.1rem;
+  }
+
+  .search-bar {
+    margin: 0;
   }
 
   .search-bar.expanded {
@@ -2209,15 +2255,8 @@ label.attachment-drop-zone.drag-over {
     gap: 6px;
   }
 
-  .header-right .btn-sm {
-    padding: 7px 10px;
-    font-size: 0;
-    gap: 0;
-  }
-
-  .header-right .btn-sm svg {
-    width: 16px;
-    height: 16px;
+  .btn-group {
+    align-items: stretch;
   }
 
   .has-tooltip::after {
@@ -2271,10 +2310,6 @@ label.attachment-drop-zone.drag-over {
     padding: 10px 12px;
     margin: 8px 8px 0;
     border-radius: 12px;
-  }
-
-  .task-count {
-    display: none;
   }
 
   .board-container {
