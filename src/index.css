@@ -999,7 +999,7 @@ body {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 16px;
-  padding: 32px;
+  padding: 24px;
   width: 100%;
   max-width: 660px;
   min-height: 520px;
@@ -2152,6 +2152,9 @@ label.attachment-drop-zone.drag-over {
   top: calc(100% + 4px);
   left: 0;
   right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -2424,6 +2427,10 @@ label.attachment-drop-zone.drag-over {
     padding: 10px 12px;
     margin: 8px 8px 0;
     border-radius: 12px;
+  }
+
+  .modal {
+    padding: 16px;
   }
 
   .board-container {
