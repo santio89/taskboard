@@ -420,8 +420,8 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
             Advanced
           </button>
 
-          {showAdvanced && (
-            <div className="advanced-section">
+          <div className={`advanced-section ${showAdvanced ? 'open' : ''}`}>
+            <div className="advanced-section-inner">
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="task-start">Start Date</label>
@@ -484,7 +484,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
                 )}
               </div>
             </div>
-          )}
+          </div>
 
           <div className="modal-actions">
             <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>

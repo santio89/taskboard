@@ -86,7 +86,7 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
         </div>
       </div>
 
-      {!collapsed && (
+      <div className={`column-body ${collapsed ? 'collapsed' : ''}`}>
         <div ref={setDroppableRef} className="column-tasks">
           <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
             {tasks.map((task) => (
@@ -99,7 +99,7 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
             </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

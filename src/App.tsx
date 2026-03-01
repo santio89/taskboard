@@ -433,7 +433,6 @@ export default function App() {
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable;
-      if (isInput) return;
 
       if (e.key === 'Escape' && isAnyModalOpen()) {
         setTaskModalOpen(false);
@@ -446,7 +445,7 @@ export default function App() {
         return;
       }
 
-      if (isAnyModalOpen()) return;
+      if (isAnyModalOpen() || isInput) return;
 
       if (e.key === 'n' || e.key === 'N') {
         if (columns.length > 0) {
@@ -493,15 +492,17 @@ export default function App() {
         />
         <div className="header-right">
           <span className="task-count">{tasks.length} tasks</span>
-          <button className="icon-btn has-tooltip" onClick={() => setAnalyticsOpen(true)} aria-label="Analytics" data-tooltip="Analytics">
+          <button className="btn btn-secondary btn-sm has-tooltip" onClick={() => setAnalyticsOpen(true)} aria-label="Analytics" data-tooltip="Analytics">
             <BarChart3 size={16} />
           </button>
-          <button className="icon-btn has-tooltip" onClick={handleExport} aria-label="Export board" data-tooltip="Export">
-            <Download size={16} />
-          </button>
-          <button className="icon-btn has-tooltip" onClick={handleImport} aria-label="Import board" data-tooltip="Import">
-            <Upload size={16} />
-          </button>
+          <div className="btn-group">
+            <button className="btn btn-secondary btn-sm has-tooltip" onClick={handleExport} aria-label="Export board" data-tooltip="Export">
+              <Download size={16} />
+            </button>
+            <button className="btn btn-secondary btn-sm has-tooltip" onClick={handleImport} aria-label="Import board" data-tooltip="Import">
+              <Upload size={16} />
+            </button>
+          </div>
           <button className="btn btn-secondary btn-sm" onClick={() => setPresetsModalOpen(true)}>
             <LayoutTemplate size={15} /> Presets
           </button>

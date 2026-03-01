@@ -1,6 +1,10 @@
 /* ============================================
    CSS Variables — Light & Dark themes
    ============================================ */
+:root {
+  interpolate-size: allow-keywords;
+}
+
 :root,
 [data-theme='light'] {
   --bg-primary: #f5f5f7;
@@ -203,7 +207,7 @@ body {
   flex-shrink: 0;
   z-index: 10;
   overflow: visible;
-  transition: background-color 0.3s var(--ease);
+  transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease);
 }
 
 .header-left {
@@ -228,36 +232,13 @@ body {
 
 .task-count {
   font-size: 0.75rem;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   font-weight: 500;
   padding: 5px 12px;
-  background: var(--bg-tertiary);
+  background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 20px;
-}
-
-.theme-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s var(--ease);
-}
-
-.theme-toggle:hover {
-  background: var(--bg-hover);
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.theme-toggle:active {
-  transform: scale(0.92);
+  transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
 }
 
 /* ============================================
@@ -276,7 +257,8 @@ body {
   margin: 0 20px;
 }
 
-.search-toggle {
+.search-toggle,
+.theme-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,7 +266,7 @@ body {
   height: 36px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
-  background: var(--bg-secondary);
+  background: var(--card-bg);
   color: var(--text-secondary);
   cursor: pointer;
   position: relative;
@@ -304,10 +286,16 @@ body {
   margin: 0;
 }
 
-.search-toggle:hover {
+.search-toggle:hover,
+.theme-toggle:hover {
   background: var(--bg-hover);
   color: var(--accent);
   border-color: var(--accent);
+}
+
+.search-toggle:active,
+.theme-toggle:active {
+  transform: scale(0.92);
 }
 
 .search-toggle.has-filter {
@@ -324,7 +312,7 @@ body {
   height: 8px;
   border-radius: 50%;
   background: var(--accent);
-  border: 2px solid var(--bg-secondary);
+  border: 2px solid var(--card-bg);
 }
 
 .search-input-wrap {
@@ -340,6 +328,7 @@ body {
   flex: 1;
   max-width: 480px;
   opacity: 1;
+  overflow: visible;
 }
 
 .search-icon {
@@ -408,10 +397,10 @@ body {
   font-family: inherit;
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  background: transparent;
+  background: var(--card-bg);
   color: var(--text-tertiary);
   cursor: pointer;
-  transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease), transform 0.15s var(--ease);
 }
 
 .filter-pill:hover {
@@ -625,8 +614,21 @@ body {
   transform: rotate(-90deg);
 }
 
-.column-tasks {
+.column-body {
   flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  transition: height 0.3s var(--ease-out), opacity 0.25s var(--ease), flex 0.3s var(--ease-out);
+}
+
+.column-body.collapsed {
+  flex: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.column-tasks {
   overflow-y: auto;
   padding: 10px 10px 14px;
   display: flex;
@@ -1130,8 +1132,21 @@ body {
 }
 
 .advanced-section {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: height 0.3s var(--ease-out), opacity 0.25s var(--ease);
+}
+
+.advanced-section.open {
+  height: auto;
+  overflow: visible;
+  opacity: 1;
   margin-top: 12px;
-  animation: fadeIn 0.2s var(--ease);
+}
+
+.advanced-section-inner {
+  padding-top: 4px;
 }
 
 .modal-actions {
@@ -1158,7 +1173,7 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s var(--ease), color 0.2s var(--ease), box-shadow 0.2s var(--ease), opacity 0.2s var(--ease);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), box-shadow 0.2s var(--ease), opacity 0.2s var(--ease), border-color 0.2s var(--ease), transform 0.2s var(--ease);
 }
 
 .btn-primary {
@@ -1178,7 +1193,7 @@ body {
 }
 
 .btn-secondary {
-  background: var(--bg-tertiary);
+  background: var(--card-bg);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
 }
@@ -1191,6 +1206,23 @@ body {
 
 .btn-secondary:active {
   transform: translateY(0) scale(0.97);
+}
+
+.btn-group {
+  display: flex;
+}
+
+.btn-group .btn {
+  border-radius: 0;
+}
+
+.btn-group .btn:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.btn-group .btn:last-child {
+  border-radius: 0 8px 8px 0;
+  border-left: none;
 }
 
 .btn-sm {
