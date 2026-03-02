@@ -1981,6 +1981,7 @@ label.attachment-drop-zone.drag-over {
 .donut-chart-wrap {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 20px;
 }
 
@@ -1997,7 +1998,7 @@ label.attachment-drop-zone.drag-over {
 }
 
 .donut-center-label {
-  font-size: 10px;
+  font-size: 0.8rem;
   font-weight: 500;
   fill: var(--text-tertiary);
 }
@@ -2006,7 +2007,6 @@ label.attachment-drop-zone.drag-over {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex: 1;
 }
 
 .legend-item {
