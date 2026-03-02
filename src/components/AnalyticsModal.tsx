@@ -186,7 +186,7 @@ export function AnalyticsModal({ isOpen, tasks, columns, onClose }: AnalyticsMod
                       ))
                     )}
                     <text x="60" y="58" textAnchor="middle" className="donut-center-value">{priorityTotal}</text>
-                    <text x="60" y="72" textAnchor="middle" className="donut-center-label">tasks</text>
+                    <text x="60" y="74" textAnchor="middle" className="donut-center-label">tasks</text>
                   </svg>
                   <div className="donut-legend">
                     {donutSegments.map((seg, i) => (
