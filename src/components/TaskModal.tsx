@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Task, Priority, Column, Subtask } from '../types';
 import { TITLE_MAX_LENGTH, TAG_AND_ESTIMATE_MAX_LENGTH, TAG_MAX_LENGTH, DESCRIPTION_MAX_LENGTH } from '../types';
-import { X, Plus, FileText, Image, Film, Music, File, Download, Trash2, Check, ChevronDown, GripVertical, Pencil } from 'lucide-react';
+import { X, Plus, FileText, Image, Film, Music, File, Download, Trash2, Check, ChevronDown, GripVertical, Scan } from 'lucide-react';
 import { CustomSelect } from './CustomSelect';
 import type { AttachmentMeta } from '../store/attachmentStore';
 import * as attachmentStore from '../store/attachmentStore';
@@ -65,7 +65,7 @@ function SortableSubtaskItem({ subtask, onToggle, onRemove, onEdit }: { subtask:
       <div className="subtask-actions">
         {!editing && (
           <button type="button" className="icon-btn subtask-action-btn" onClick={() => setEditing(true)} aria-label="Edit subtask">
-            <Pencil size={12} />
+            <Scan size={12} />
           </button>
         )}
         <button type="button" className="icon-btn subtask-action-btn danger" onClick={() => onRemove(subtask.id)} aria-label="Remove subtask">

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Task } from '../types';
-import { Trash2, GripVertical, Pencil, Clock, Paperclip, Calendar, CheckSquare, Timer } from 'lucide-react';
+import { Trash2, GripVertical, Scan, Clock, Paperclip, Calendar, CheckSquare, Timer } from 'lucide-react';
 import * as attachmentStore from '../store/attachmentStore';
 import { renderInlineMarkdown } from '../utils/markdown';
 import { Tooltip } from './Tooltip';
@@ -55,8 +55,8 @@ export function TaskCard({ task, highlightColor, onEdit, onDelete }: TaskCardPro
           <GripVertical size={16} />
         </button>
         <div className="task-card-actions">
-          <button className="icon-btn has-tooltip" onClick={() => onEdit(task)} aria-label="Edit task" data-tooltip="Edit task">
-            <Pencil size={14} />
+          <button className="icon-btn has-tooltip" onClick={() => onEdit(task)} aria-label="Open task" data-tooltip="Open task">
+            <Scan size={14} />
           </button>
           <button className="icon-btn danger has-tooltip" onClick={() => onDelete(task.id)} aria-label="Delete task" data-tooltip="Delete task">
             <Trash2 size={14} />

@@ -6,7 +6,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import type { Task, Column } from '../types';
 import { TaskCard } from './TaskCard';
 import { Tooltip } from './Tooltip';
-import { Plus, GripHorizontal, Trash2, Pencil, ChevronDown } from 'lucide-react';
+import { Plus, GripHorizontal, Trash2, Scan, ChevronDown } from 'lucide-react';
 
 interface KanbanColumnProps {
   column: Column;
@@ -72,10 +72,10 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
           <button
             className="icon-btn has-tooltip"
             onClick={() => onEditColumn(column)}
-            aria-label="Edit column"
-            data-tooltip="Edit column"
+            aria-label="Open column"
+            data-tooltip="Open column"
           >
-            <Pencil size={13} />
+            <Scan size={13} />
           </button>
           <button
             className="icon-btn danger has-tooltip"
