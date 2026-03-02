@@ -575,7 +575,7 @@ export default function App() {
               )}
               {activeColumn && (
                 <div
-                  className="kanban-column column-overlay"
+                  className="kanban-column column-overlay column-overlay-collapsed"
                   style={{
                     borderColor: activeColumn.color,
                     boxShadow: `0 0 0 1px ${activeColumn.color}88, 0 0 16px ${activeColumn.color}33`,

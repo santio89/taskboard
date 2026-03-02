@@ -552,6 +552,11 @@ body {
   will-change: transform;
 }
 
+.kanban-column.column-overlay.column-overlay-collapsed {
+  min-height: 0;
+  height: fit-content;
+}
+
 .kanban-column.column-over {
 }
 
