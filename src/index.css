@@ -1005,16 +1005,20 @@ body {
 
 .icon-btn.add-btn {
   color: var(--text-secondary);
-  border: 1px solid var(--border-color);
+  border: 1px solid transparent;
   border-radius: 8px;
-  background: var(--card-bg);
+  background: var(--bg-hover);
   width: 28px;
   height: 28px;
   aspect-ratio: 1;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
 }
 
-.icon-btn.add-btn:hover {
-  background: var(--bg-hover);
+.icon-btn.add-btn:hover,
+.icon-btn.add-btn:focus-visible {
   color: var(--accent);
   border-color: var(--accent);
 }
