@@ -565,7 +565,7 @@ body {
 }
 
 .kanban-column.column-overlay .column-header {
-  padding: 14px;
+  padding: 12px;
 }
 
 .kanban-column.column-over {
@@ -575,7 +575,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px;
+  padding: 12px;
   flex-shrink: 0;
 }
 
@@ -700,11 +700,11 @@ body {
 .column-tasks {
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 10px 10px 14px;
+  padding: 12px;
   border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   min-height: 60px;
 }
 
