@@ -531,8 +531,8 @@ body {
 .kanban-column {
   display: flex;
   flex-direction: column;
-  width: 290px;
-  min-width: 290px;
+  width: 300px;
+  min-width: 300px;
   max-height: 100%;
   background: var(--column-bg);
   border-radius: 14px;
@@ -612,6 +612,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .column-dot {
@@ -629,8 +630,10 @@ body {
   color: var(--text-secondary);
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .column-count {

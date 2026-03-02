@@ -584,7 +584,7 @@ export default function App() {
                   <div className="column-header">
                     <div className="column-title-group">
                       <span className="column-dot" style={{ backgroundColor: activeColumn.color, boxShadow: `0 0 6px ${activeColumn.color}bf, 0 0 10px ${activeColumn.color}66` }} />
-                      <h3 className="column-title">{activeColumn.title}</h3>
+                      <h3 className="column-title" title={activeColumn.title}>{activeColumn.title}</h3>
                       <span className="column-count">{tasksByColumn[activeColumn.id]?.length ?? 0}</span>
                     </div>
                   </div>

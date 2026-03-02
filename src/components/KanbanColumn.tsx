@@ -59,7 +59,7 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
             <GripHorizontal size={14} />
           </button>
           <span className="column-dot" style={{ backgroundColor: column.color, boxShadow: `0 0 6px ${column.color}bf, 0 0 10px ${column.color}66` }} />
-          <h3 className="column-title">{column.title}</h3>
+          <h3 className="column-title" title={column.title}>{column.title}</h3>
           <span className="column-count">{tasks.length}</span>
           <button className={`column-collapse-btn ${collapsed ? 'collapsed' : ''}`} onClick={() => setCollapsed(!collapsed)} aria-label={collapsed ? 'Expand' : 'Collapse'}>
             <ChevronDown size={14} />
