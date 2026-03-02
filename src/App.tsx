@@ -5,7 +5,6 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  closestCenter,
   pointerWithin,
   rectIntersection,
 } from '@dnd-kit/core';
@@ -98,7 +97,15 @@ export default function App() {
             (c) => (c.id as string).startsWith('column-') && !(c.id as string).startsWith('column-drop-'),
           ),
         };
-        return closestCenter(filtered);
+        const pointerX = args.pointerCoordinates?.x ?? 0;
+        const entries = filtered.droppableContainers.map((container) => {
+          const rect = container.rect.current;
+          if (!rect) return { id: container.id, distance: Infinity };
+          const centerX = rect.left + rect.width / 2;
+          return { id: container.id, distance: Math.abs(pointerX - centerX) };
+        });
+        entries.sort((a, b) => a.distance - b.distance);
+        return entries.length > 0 ? [{ id: entries[0].id, data: { droppableContainer: filtered.droppableContainers.find((c) => c.id === entries[0].id)! } }] : [];
       }
       const pointerCollisions = pointerWithin(args);
       if (pointerCollisions.length > 0) return pointerCollisions;

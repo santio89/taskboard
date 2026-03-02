@@ -107,6 +107,10 @@
   box-sizing: border-box;
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
   --ease-out: cubic-bezier(0.22, 0.68, 0, 1);
+  transition:
+    color 0.25s var(--ease),
+    background-color 0.25s var(--ease),
+    border-color 0.25s var(--ease);
 }
 
 html {
@@ -161,8 +165,8 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   transition:
-    background-color 0.3s var(--ease),
-    color 0.3s var(--ease);
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease);
 }
 
 * {
@@ -222,8 +226,8 @@ body {
   z-index: 10;
   overflow: visible;
   transition:
-    background-color 0.3s var(--ease),
-    border-color 0.3s var(--ease);
+    background-color 0.25s var(--ease),
+    border-color 0.25s var(--ease);
 }
 
 .header-left {
@@ -256,9 +260,9 @@ body {
   border-radius: 20px;
   white-space: nowrap;
   transition:
-    background-color 0.3s var(--ease),
-    color 0.3s var(--ease),
-    border-color 0.3s var(--ease);
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease),
+    border-color 0.25s var(--ease);
 }
 
 /* ============================================
@@ -386,7 +390,7 @@ body {
   transition:
     border-color 0.2s var(--ease),
     box-shadow 0.2s var(--ease),
-    background-color 0.3s var(--ease);
+    background-color 0.25s var(--ease);
 }
 
 .search-input:focus {
@@ -539,11 +543,12 @@ body {
   border-radius: 14px;
   border: 1px solid var(--border-color);
   transition:
+    color 0.25s var(--ease),
     transform 200ms cubic-bezier(0.22, 0.68, 0, 1),
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    opacity 0.2s ease,
-    background-color 0.3s ease;
+    border-color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    opacity 0.2s var(--ease),
+    background-color 0.25s var(--ease);
 }
 
 .kanban-column.column-dragging {
@@ -646,8 +651,8 @@ body {
   min-width: 20px;
   text-align: center;
   transition:
-    background-color 0.3s var(--ease),
-    color 0.3s var(--ease);
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease);
 }
 
 .column-collapse-btn {
@@ -717,8 +722,8 @@ body {
   opacity: 0.5;
   margin-top: 2px;
   transition:
-    background-color 0.3s var(--ease),
-    color 0.3s var(--ease);
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease);
 }
 
 /* ============================================
@@ -819,7 +824,7 @@ body {
 
 .task-card-actions {
   display: flex;
-  gap: 2px;
+  gap: 1px;
   opacity: 0;
   transition: opacity 0.2s var(--ease);
 }
@@ -1000,20 +1005,15 @@ body {
 
 .icon-btn.add-btn {
   color: var(--text-secondary);
-  border: 1px solid transparent;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   background: var(--card-bg);
   width: 28px;
   height: 28px;
   aspect-ratio: 1;
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease),
-    border-color 0.2s var(--ease);
 }
 
-.icon-btn.add-btn:hover,
-.icon-btn.add-btn:focus-visible {
+.icon-btn.add-btn:hover {
   background: var(--bg-hover);
   color: var(--accent);
   border-color: var(--accent);
@@ -1095,7 +1095,7 @@ body {
   transition:
     border-color 0.2s var(--ease),
     box-shadow 0.2s var(--ease),
-    background-color 0.3s var(--ease);
+    background-color 0.25s var(--ease);
   outline: none;
 }
 
@@ -2162,7 +2162,7 @@ label.attachment-drop-zone.drag-over {
   transition:
     border-color 0.2s var(--ease),
     box-shadow 0.2s var(--ease),
-    background-color 0.3s var(--ease);
+    background-color 0.25s var(--ease);
   outline: none;
   text-align: left;
 }
