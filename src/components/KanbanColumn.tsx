@@ -4,6 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { Task, Column } from '../types';
+import * as columnStore from '../store/columnStore';
 import { TaskCard } from './TaskCard';
 import { Tooltip } from './Tooltip';
 import { Plus, GripHorizontal, Trash2, Scan, ChevronDown } from 'lucide-react';
@@ -20,8 +21,16 @@ interface KanbanColumnProps {
 }
 
 export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask, onDeleteTask, onEditColumn, onDeleteColumn }: KanbanColumnProps) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => columnStore.getColumnCollapsed(column.id));
   const { setNodeRef: setDroppableRef } = useDroppable({ id: `column-drop-${column.id}` });
+
+  const handleToggleCollapsed = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      columnStore.setColumnCollapsed(column.id, next);
+      return next;
+    });
+  };
 
   const {
     attributes,
@@ -64,7 +73,7 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
             <h3 className="column-title">{column.title}</h3>
           </Tooltip>
           <span className="column-count">{tasks.length}</span>
-          <button className={`column-collapse-btn ${collapsed ? 'collapsed' : ''}`} onClick={() => setCollapsed(!collapsed)} aria-label={collapsed ? 'Expand' : 'Collapse'}>
+          <button className={`column-collapse-btn ${collapsed ? 'collapsed' : ''}`} onClick={handleToggleCollapsed} aria-label={collapsed ? 'Expand' : 'Collapse'}>
             <ChevronDown size={14} />
           </button>
         </div>

@@ -564,6 +564,10 @@ body {
   height: fit-content;
 }
 
+.kanban-column.column-overlay .column-header {
+  padding: 14px;
+}
+
 .kanban-column.column-over {
 }
 
@@ -571,7 +575,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 14px 10px;
+  padding: 14px;
   flex-shrink: 0;
 }
 
