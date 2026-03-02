@@ -110,6 +110,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
   const [subtasks, setSubtasks] = useState<Subtask[]>(() => task?.subtasks ?? []);
   const [subtaskInput, setSubtaskInput] = useState('');
   const [attachments, setAttachments] = useState<AttachmentMeta[]>([]);
+  const [attachmentsToDelete, setAttachmentsToDelete] = useState<string[]>([]);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -124,6 +125,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
       attachmentStore.getAttachmentsByTask(task.id)
         .then((a) => { if (!cancelled) setAttachments(a); })
         .catch(() => { if (!cancelled) setAttachments([]); });
+      if (!cancelled) setAttachmentsToDelete([]);
     }
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
@@ -147,6 +149,14 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
       for (const file of pendingFiles) {
         await attachmentStore.addAttachment(task.id, file);
       }
+    }
+
+    if (task && attachmentsToDelete.length > 0) {
+      for (const id of attachmentsToDelete) {
+        await attachmentStore.deleteAttachment(id);
+      }
+      setAttachments((prev) => prev.filter((a) => !attachmentsToDelete.includes(a.id)));
+      setAttachmentsToDelete([]);
     }
 
     onSave({
@@ -197,13 +207,8 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
     setPendingFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleDeleteAttachment = async (id: string) => {
-    try {
-      await attachmentStore.deleteAttachment(id);
-      setAttachments((prev) => prev.filter((a) => a.id !== id));
-    } catch {
-      // Silently handle — attachment may have been deleted already
-    }
+  const handleDeleteAttachment = (id: string) => {
+    setAttachmentsToDelete((prev) => [...prev, id]);
   };
 
   const handleDownloadAttachment = async (att: AttachmentMeta) => {
@@ -376,9 +381,11 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
               <Plus size={20} />
               <span>{isDragOver ? 'Drop files here' : 'Click or drag files here'}</span>
             </label>
-            {(attachments.length > 0 || pendingFiles.length > 0) && (
+            {(attachments.filter((a) => !attachmentsToDelete.includes(a.id)).length > 0 || pendingFiles.length > 0) && (
               <div className="attachment-list">
-                {attachments.map((att) => {
+                {attachments
+                  .filter((a) => !attachmentsToDelete.includes(a.id))
+                  .map((att) => {
                   const Icon = getFileIcon(att.type);
                   return (
                     <div key={att.id} className="attachment-item">
