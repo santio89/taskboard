@@ -23,6 +23,7 @@ import * as taskStore from './store/taskStore';
 import * as columnStore from './store/columnStore';
 import * as attachmentStore from './store/attachmentStore';
 import { SearchBar } from './components/SearchBar';
+import { Tooltip } from './components/Tooltip';
 import { fireConfetti } from './utils/confetti';
 import { AnalyticsModal } from './components/AnalyticsModal';
 import { ToastContainer } from './components/Toast';
@@ -517,7 +518,7 @@ export default function App() {
           <button className="btn btn-primary btn-sm" onClick={handleOpenAddColumn}>
             <Plus size={16} /> Add Column
           </button>
-          <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+          <button className="theme-toggle has-tooltip" onClick={toggleTheme} aria-label="Toggle theme" data-tooltip="Toggle theme">
             {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
           </button>
         </div>
@@ -584,7 +585,9 @@ export default function App() {
                   <div className="column-header">
                     <div className="column-title-group">
                       <span className="column-dot" style={{ backgroundColor: activeColumn.color, boxShadow: `0 0 6px ${activeColumn.color}bf, 0 0 10px ${activeColumn.color}66` }} />
-                      <h3 className="column-title" title={activeColumn.title}>{activeColumn.title}</h3>
+                      <Tooltip text={activeColumn.title} position="below">
+                        <h3 className="column-title">{activeColumn.title}</h3>
+                      </Tooltip>
                       <span className="column-count">{tasksByColumn[activeColumn.id]?.length ?? 0}</span>
                     </div>
                   </div>

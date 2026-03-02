@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { Tooltip } from './Tooltip';
 
 interface Option {
   value: string;
@@ -11,9 +12,11 @@ interface CustomSelectProps {
   value: string;
   options: Option[];
   onChange: (value: string) => void;
+  /** When true, option labels use 2-line clamp + tooltip on hover (e.g. for column names) */
+  showOptionTooltip?: boolean;
 }
 
-export function CustomSelect({ id, value, options, onChange }: CustomSelectProps) {
+export function CustomSelect({ id, value, options, onChange, showOptionTooltip = false }: CustomSelectProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -51,7 +54,13 @@ export function CustomSelect({ id, value, options, onChange }: CustomSelectProps
                 setOpen(false);
               }}
             >
-              {opt.label}
+              {showOptionTooltip ? (
+                <Tooltip text={opt.label} position="below">
+                  <span className="custom-select-option-label">{opt.label}</span>
+                </Tooltip>
+              ) : (
+                opt.label
+              )}
             </li>
           ))}
         </ul>

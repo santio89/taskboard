@@ -827,6 +827,16 @@ body {
   opacity: 1;
 }
 
+.task-card-actions .icon-btn:hover {
+  background: var(--card-bg);
+  color: var(--text-primary);
+}
+
+.task-card-actions .icon-btn.danger:hover {
+  background: var(--priority-high-bg);
+  color: var(--danger);
+}
+
 .task-title {
   font-size: 0.85rem;
   font-weight: 600;
@@ -834,6 +844,11 @@ body {
   color: var(--text-primary);
   margin-bottom: 3px;
   word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .task-description {
@@ -1160,8 +1175,12 @@ body {
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
+}
+
+.form-row .form-group {
+  min-width: 0;
 }
 
 .tag-input-row {
@@ -2142,6 +2161,14 @@ label.attachment-drop-zone.drag-over {
   text-align: left;
 }
 
+.custom-select-trigger > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 10px;
+}
+
 .custom-select-trigger:hover {
   border-color: var(--border-hover);
 }
@@ -2193,6 +2220,22 @@ label.attachment-drop-zone.drag-over {
   transition:
     background 0.2s var(--ease),
     color 0.2s var(--ease);
+  min-width: 0;
+}
+
+.custom-select-option > span {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.custom-select-option-label {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .custom-select-option:hover {
@@ -2232,6 +2275,7 @@ label.attachment-drop-zone.drag-over {
   transition:
     opacity 0.2s var(--ease),
     transform 0.2s var(--ease);
+  transition-delay: 0s;
   z-index: 200;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
@@ -2239,6 +2283,30 @@ label.attachment-drop-zone.drag-over {
 .has-tooltip:hover::after {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+  transition-delay: 0.4s;
+}
+
+/* Portal-rendered tooltip (task title) – same style as Export/Import */
+.tooltip-portal {
+  padding: 5px 10px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: normal;
+  max-width: 220px;
+  text-align: center;
+  color: #f0f0f0;
+  background: #1a1a1e;
+  border: 1px solid #2c2c2e;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ============================================

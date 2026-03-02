@@ -29,9 +29,10 @@ export function SearchBar({ search, onSearchChange, priorityFilter, onPriorityFi
   return (
     <div className={`search-bar ${expanded ? 'expanded' : ''}`}>
       <button
-        className={`search-toggle ${search || priorityFilter ? 'has-filter' : ''} ${expanded ? 'search-toggle-hidden' : ''}`}
+        className={`search-toggle has-tooltip ${search || priorityFilter ? 'has-filter' : ''} ${expanded ? 'search-toggle-hidden' : ''}`}
         onClick={() => onExpandedChange(true)}
         aria-label="Open search"
+        data-tooltip="Search"
         tabIndex={expanded ? -1 : 0}
       >
         <Search size={16} />

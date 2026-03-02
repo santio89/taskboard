@@ -5,6 +5,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { Task, Column } from '../types';
 import { TaskCard } from './TaskCard';
+import { Tooltip } from './Tooltip';
 import { Plus, GripHorizontal, Trash2, Pencil, ChevronDown } from 'lucide-react';
 
 interface KanbanColumnProps {
@@ -59,7 +60,9 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
             <GripHorizontal size={14} />
           </button>
           <span className="column-dot" style={{ backgroundColor: column.color, boxShadow: `0 0 6px ${column.color}bf, 0 0 10px ${column.color}66` }} />
-          <h3 className="column-title" title={column.title}>{column.title}</h3>
+          <Tooltip text={column.title} position="below">
+            <h3 className="column-title">{column.title}</h3>
+          </Tooltip>
           <span className="column-count">{tasks.length}</span>
           <button className={`column-collapse-btn ${collapsed ? 'collapsed' : ''}`} onClick={() => setCollapsed(!collapsed)} aria-label={collapsed ? 'Expand' : 'Collapse'}>
             <ChevronDown size={14} />
@@ -67,20 +70,22 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
         </div>
         <div className="column-header-actions">
           <button
-            className="icon-btn"
+            className="icon-btn has-tooltip"
             onClick={() => onEditColumn(column)}
             aria-label="Edit column"
+            data-tooltip="Edit column"
           >
             <Pencil size={13} />
           </button>
           <button
-            className="icon-btn danger"
+            className="icon-btn danger has-tooltip"
             onClick={() => onDeleteColumn(column.id)}
             aria-label="Delete column"
+            data-tooltip="Delete column"
           >
             <Trash2 size={13} />
           </button>
-          <button className="icon-btn add-btn" onClick={() => onAddTask(column.id)} aria-label="Add task">
+          <button className="icon-btn add-btn has-tooltip" onClick={() => onAddTask(column.id)} aria-label="Add task" data-tooltip="Add task">
             <Plus size={18} />
           </button>
         </div>

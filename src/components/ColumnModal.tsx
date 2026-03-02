@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import type { Column } from '../types';
-import { COLUMN_COLORS } from '../types';
+import { COLUMN_COLORS, TITLE_MAX_LENGTH } from '../types';
 import { X, Pipette } from 'lucide-react';
 
 interface ColumnModalProps {
@@ -54,6 +54,7 @@ export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProp
               id="col-title"
               type="text"
               value={title}
+              maxLength={TITLE_MAX_LENGTH}
               onChange={(e) => { setTitle(e.target.value); setError(''); }}
               placeholder="e.g. Blocked, QA, Deployed..."
             />

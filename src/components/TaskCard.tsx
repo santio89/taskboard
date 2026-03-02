@@ -5,6 +5,7 @@ import type { Task } from '../types';
 import { Trash2, GripVertical, Pencil, Clock, Paperclip, Calendar, CheckSquare, Timer } from 'lucide-react';
 import * as attachmentStore from '../store/attachmentStore';
 import { renderInlineMarkdown } from '../utils/markdown';
+import { Tooltip } from './Tooltip';
 
 interface TaskCardProps {
   task: Task;
@@ -48,22 +49,24 @@ export function TaskCard({ task, highlightColor, onEdit, onDelete }: TaskCardPro
   const prio = priorityConfig[task.priority];
 
   return (
-    <div ref={setNodeRef} style={style} className={`task-card ${isDragging ? 'dragging' : ''}`} {...attributes}>
+    <div ref={setNodeRef} style={style} className={`task-card ${isDragging ? 'dragging' : ''}`} {...attributes} title={undefined}>
       <div className="task-card-header">
         <button className="drag-handle" {...listeners} aria-label="Drag to reorder">
           <GripVertical size={16} />
         </button>
         <div className="task-card-actions">
-          <button className="icon-btn" onClick={() => onEdit(task)} aria-label="Edit task">
+          <button className="icon-btn has-tooltip" onClick={() => onEdit(task)} aria-label="Edit task" data-tooltip="Edit task">
             <Pencil size={14} />
           </button>
-          <button className="icon-btn danger" onClick={() => onDelete(task.id)} aria-label="Delete task">
+          <button className="icon-btn danger has-tooltip" onClick={() => onDelete(task.id)} aria-label="Delete task" data-tooltip="Delete task">
             <Trash2 size={14} />
           </button>
         </div>
       </div>
 
-      <h4 className="task-title">{task.title}</h4>
+      <Tooltip text={task.title} position="below">
+        <h4 className="task-title">{task.title}</h4>
+      </Tooltip>
       {task.description && <p className="task-description" dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(task.description) }} />}
 
       <div className="task-card-badges">

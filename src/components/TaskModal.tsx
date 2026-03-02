@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Task, Priority, Column, Subtask } from '../types';
+import { TITLE_MAX_LENGTH, TAG_AND_ESTIMATE_MAX_LENGTH, TAG_MAX_LENGTH, DESCRIPTION_MAX_LENGTH } from '../types';
 import { X, Plus, FileText, Image, Film, Music, File, Download, Trash2, Check, ChevronDown, GripVertical, Pencil } from 'lucide-react';
 import { CustomSelect } from './CustomSelect';
 import type { AttachmentMeta } from '../store/attachmentStore';
@@ -22,7 +23,7 @@ function SortableSubtaskItem({ subtask, onToggle, onRemove, onEdit }: { subtask:
   }, [editing]);
 
   const commitEdit = () => {
-    const trimmed = editValue.trim();
+    const trimmed = editValue.trim().slice(0, TITLE_MAX_LENGTH);
     if (trimmed && trimmed !== subtask.title) {
       onEdit(subtask.id, trimmed);
     } else {
@@ -50,6 +51,7 @@ function SortableSubtaskItem({ subtask, onToggle, onRemove, onEdit }: { subtask:
           type="text"
           className="subtask-edit-input"
           value={editValue}
+          maxLength={TITLE_MAX_LENGTH}
           onChange={(e) => setEditValue(e.target.value)}
           onBlur={commitEdit}
           onKeyDown={(e) => {
@@ -161,13 +163,13 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
 
     onSave({
       title: title.trim(),
-      description: description.trim(),
+      description: description.trim().slice(0, DESCRIPTION_MAX_LENGTH),
       priority,
       columnId,
-      tags,
+      tags: tags.map((t) => t.slice(0, TAG_MAX_LENGTH)),
       startDate: startDate || undefined,
       dueDate: dueDate || undefined,
-      estimate: estimate.trim() || undefined,
+      estimate: estimate.trim().slice(0, TAG_AND_ESTIMATE_MAX_LENGTH) || undefined,
       subtasks: subtasks.length > 0 ? subtasks : undefined,
       pendingFiles: task ? undefined : pendingFiles.length > 0 ? pendingFiles : undefined,
     });
@@ -227,7 +229,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
   };
 
   const handleAddTag = () => {
-    const tag = tagInput.trim().toLowerCase();
+    const tag = tagInput.trim().toLowerCase().slice(0, TAG_MAX_LENGTH);
     if (tag && !tags.includes(tag)) {
       setTags([...tags, tag]);
     }
@@ -242,7 +244,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
   };
 
   const handleAddSubtask = () => {
-    const text = subtaskInput.trim();
+    const text = subtaskInput.trim().slice(0, TITLE_MAX_LENGTH);
     if (!text) return;
     setSubtasks((prev) => [...prev, { id: uuidv4(), title: text, done: false }]);
     setSubtaskInput('');
@@ -264,7 +266,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
   };
 
   const editSubtask = (id: string, newTitle: string) => {
-    setSubtasks((prev) => prev.map((s) => s.id === id ? { ...s, title: newTitle } : s));
+    setSubtasks((prev) => prev.map((s) => s.id === id ? { ...s, title: newTitle.slice(0, TITLE_MAX_LENGTH) } : s));
   };
 
   const subtaskSensors = useSensors(
@@ -301,6 +303,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
               id="task-title"
               type="text"
               value={title}
+              maxLength={TITLE_MAX_LENGTH}
               onChange={(e) => { setTitle(e.target.value); setErrors((p) => ({ ...p, title: '' })); }}
               placeholder="What needs to be done?"
             />
@@ -312,6 +315,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
             <textarea
               id="task-desc"
               value={description}
+              maxLength={DESCRIPTION_MAX_LENGTH}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Add details..."
             />
@@ -337,6 +341,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
                 value={columnId}
                 options={columns.map((col) => ({ value: col.id, label: col.title }))}
                 onChange={(v) => setColumnId(v)}
+                showOptionTooltip
               />
             </div>
           </div>
@@ -347,6 +352,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
               <input
                 type="text"
                 value={tagInput}
+                maxLength={TAG_MAX_LENGTH}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
                 placeholder="Add tag and press Enter"
@@ -456,6 +462,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
                   id="task-estimate"
                   type="text"
                   value={estimate}
+                  maxLength={TAG_AND_ESTIMATE_MAX_LENGTH}
                   onChange={(e) => setEstimate(e.target.value)}
                   placeholder="e.g. 2h, 1d, 30m"
                 />
@@ -467,6 +474,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
                   <input
                     type="text"
                     value={subtaskInput}
+                    maxLength={TITLE_MAX_LENGTH}
                     onChange={(e) => setSubtaskInput(e.target.value)}
                     onKeyDown={handleSubtaskKeyDown}
                     placeholder="Add subtask and press Enter"

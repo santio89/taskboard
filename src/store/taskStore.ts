@@ -1,4 +1,5 @@
 import type { Task } from '../types';
+import { TITLE_MAX_LENGTH, TAG_AND_ESTIMATE_MAX_LENGTH, TAG_MAX_LENGTH, DESCRIPTION_MAX_LENGTH } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { deleteAttachmentsByTask } from './attachmentStore';
 
@@ -49,17 +50,17 @@ export function addTask(
   const columnTasks = tasks.filter((t) => t.columnId === columnId);
   const newTask: Task = {
     id: uuidv4(),
-    title,
-    description,
+    title: title.slice(0, TITLE_MAX_LENGTH),
+    description: description.slice(0, DESCRIPTION_MAX_LENGTH),
     priority,
     columnId,
     order: columnTasks.length,
     createdAt: new Date().toISOString(),
-    tags,
+    tags: tags.map((t) => t.slice(0, TAG_MAX_LENGTH)),
     startDate,
     dueDate,
-    subtasks,
-    estimate,
+    subtasks: subtasks?.map((s) => ({ ...s, title: s.title.slice(0, TITLE_MAX_LENGTH) })),
+    estimate: estimate != null ? estimate.slice(0, TAG_AND_ESTIMATE_MAX_LENGTH) : undefined,
   };
   tasks.push(newTask);
   saveTasks(tasks);
@@ -70,7 +71,13 @@ export function updateTask(id: string, updates: Partial<Omit<Task, 'id' | 'creat
   const tasks = loadTasks();
   const idx = tasks.findIndex((t) => t.id === id);
   if (idx === -1) return null;
-  tasks[idx] = { ...tasks[idx], ...updates };
+  const applied = { ...tasks[idx], ...updates };
+  if (typeof applied.title === 'string') applied.title = applied.title.slice(0, TITLE_MAX_LENGTH);
+  if (typeof applied.description === 'string') applied.description = applied.description.slice(0, DESCRIPTION_MAX_LENGTH);
+  if (Array.isArray(applied.tags)) applied.tags = applied.tags.map((t) => t.slice(0, TAG_MAX_LENGTH));
+  if (typeof applied.estimate === 'string') applied.estimate = applied.estimate.slice(0, TAG_AND_ESTIMATE_MAX_LENGTH);
+  if (Array.isArray(applied.subtasks)) applied.subtasks = applied.subtasks.map((s) => ({ ...s, title: s.title.slice(0, TITLE_MAX_LENGTH) }));
+  tasks[idx] = applied;
   saveTasks(tasks);
   return tasks[idx];
 }

@@ -1,5 +1,17 @@
 export type Priority = 'low' | 'medium' | 'high';
 
+/** Max length for task titles and column titles */
+export const TITLE_MAX_LENGTH = 256;
+
+/** Max length for tags and time estimate */
+export const TAG_AND_ESTIMATE_MAX_LENGTH = 64;
+
+/** Max length for a single tag */
+export const TAG_MAX_LENGTH = 32;
+
+/** Max length for task description */
+export const DESCRIPTION_MAX_LENGTH = 4096;
+
 export interface Subtask {
   id: string;
   title: string;

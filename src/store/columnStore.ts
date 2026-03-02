@@ -1,5 +1,5 @@
 import type { Column } from '../types';
-import { DEFAULT_COLUMNS } from '../types';
+import { DEFAULT_COLUMNS, TITLE_MAX_LENGTH } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 const STORAGE_KEY = 'kanban-columns';
@@ -32,7 +32,7 @@ export function addColumn(title: string, color: string): Column {
   const columns = loadColumns();
   const newColumn: Column = {
     id: uuidv4(),
-    title,
+    title: title.slice(0, TITLE_MAX_LENGTH),
     color,
   };
   columns.push(newColumn);
@@ -44,7 +44,9 @@ export function updateColumn(id: string, updates: Partial<Omit<Column, 'id'>>): 
   const columns = loadColumns();
   const idx = columns.findIndex((c) => c.id === id);
   if (idx === -1) return null;
-  columns[idx] = { ...columns[idx], ...updates };
+  const applied = { ...columns[idx], ...updates };
+  if (typeof applied.title === 'string') applied.title = applied.title.slice(0, TITLE_MAX_LENGTH);
+  columns[idx] = applied;
   saveColumns(columns);
   return columns[idx];
 }
