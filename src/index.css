@@ -450,16 +450,10 @@ body {
   overflow-x: auto;
   overflow-y: auto;
   padding: 24px 16px;
-  cursor: grab;
 }
 
 .board-container.board-container-drag-scroll {
-  cursor: grabbing;
   user-select: none;
-}
-
-.board-container .kanban-column {
-  cursor: default;
 }
 
 .board {
