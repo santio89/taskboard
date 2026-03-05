@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -56,6 +56,38 @@ export default function App() {
     confirmLabel: string;
     onConfirm: () => void;
   }>({ open: false, title: '', message: '', confirmLabel: 'Delete', onConfirm: () => {} });
+
+  const boardContainerRef = useRef<HTMLElement>(null);
+  const dragScrollRef = useRef<{ startX: number; startY: number; scrollLeft: number; scrollTop: number } | null>(null);
+
+  const handleBoardMouseDown = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    if (e.button !== 0) return;
+    const target = e.target as HTMLElement;
+    if (target.closest('.kanban-column')) return;
+    const el = e.currentTarget;
+    dragScrollRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      scrollLeft: el.scrollLeft,
+      scrollTop: el.scrollTop,
+    };
+    el.classList.add('board-container-drag-scroll');
+    const cleanup = () => {
+      dragScrollRef.current = null;
+      boardContainerRef.current?.classList.remove('board-container-drag-scroll');
+      window.removeEventListener('mouseup', cleanup);
+    };
+    window.addEventListener('mouseup', cleanup);
+  }, []);
+
+  const handleBoardMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const data = dragScrollRef.current;
+    if (!data) return;
+    e.preventDefault();
+    const el = e.currentTarget;
+    el.scrollLeft = data.scrollLeft + (data.startX - e.clientX);
+    el.scrollTop = data.scrollTop + (data.startY - e.clientY);
+  }, []);
 
   const tasksByColumn = useMemo(() => {
     const map: Record<string, Task[]> = {};
@@ -531,7 +563,12 @@ export default function App() {
         </div>
       </header>
 
-      <main className="board-container">
+      <main
+        ref={boardContainerRef}
+        className="board-container"
+        onMouseDown={handleBoardMouseDown}
+        onMouseMove={handleBoardMouseMove}
+      >
         {columns.length === 0 ? (
           <div className="empty-board">
             <div className="empty-board-icon">
