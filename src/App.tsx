@@ -3,13 +3,14 @@ import {
   DndContext,
   DragOverlay,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   pointerWithin,
   rectIntersection,
 } from '@dnd-kit/core';
 import type { DragStartEvent, DragOverEvent, DragEndEvent, CollisionDetection, DropAnimation } from '@dnd-kit/core';
-import { SortableContext, arrayMove, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, arrayMove, horizontalListSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { Task, Column, Priority, Subtask } from './types';
 import { KanbanColumn } from './components/KanbanColumn';
 import { TaskCard } from './components/TaskCard';
@@ -59,6 +60,16 @@ export default function App() {
 
   const boardContainerRef = useRef<HTMLElement>(null);
   const dragScrollRef = useRef<{ startX: number; startY: number; scrollLeft: number; scrollTop: number } | null>(null);
+
+  const [isColumnLayoutVertical, setIsColumnLayoutVertical] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
+  );
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 768px)');
+    const handler = () => setIsColumnLayoutVertical(mql.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
 
   const handleBoardMouseDown = useCallback((e: React.MouseEvent<HTMLElement>) => {
     if (e.button !== 0) return;
@@ -115,6 +126,7 @@ export default function App() {
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
   );
 
   const dropAnimation: DropAnimation = {
@@ -125,27 +137,33 @@ export default function App() {
   const collisionDetection: CollisionDetection = useCallback(
     (args) => {
       if (activeColumn) {
-        const filtered = {
-          ...args,
-          droppableContainers: args.droppableContainers.filter(
-            (c) => (c.id as string).startsWith('column-') && !(c.id as string).startsWith('column-drop-'),
-          ),
-        };
-        const pointerX = args.pointerCoordinates?.x ?? 0;
-        const entries = filtered.droppableContainers.map((container) => {
-          const rect = container.rect.current;
-          if (!rect) return { id: container.id, distance: Infinity };
-          const centerX = rect.left + rect.width / 2;
-          return { id: container.id, distance: Math.abs(pointerX - centerX) };
-        });
-        entries.sort((a, b) => a.distance - b.distance);
-        return entries.length > 0 ? [{ id: entries[0].id, data: { droppableContainer: filtered.droppableContainers.find((c) => c.id === entries[0].id)! } }] : [];
+        const columnContainers = args.droppableContainers.filter(
+          (c) => (c.id as string).startsWith('column-') && !(c.id as string).startsWith('column-drop-')
+        );
+        if (columnContainers.length === 0) return [];
+        const pointer = args.pointerCoordinates;
+        const pointerCoord = isColumnLayoutVertical ? (pointer?.y ?? 0) : (pointer?.x ?? 0);
+        let closest = columnContainers[0];
+        let minDist = Infinity;
+        for (let i = 0; i < columnContainers.length; i++) {
+          const rect = columnContainers[i].rect.current;
+          if (!rect) continue;
+          const center = isColumnLayoutVertical
+            ? rect.top + rect.height / 2
+            : rect.left + rect.width / 2;
+          const d = Math.abs(pointerCoord - center);
+          if (d < minDist) {
+            minDist = d;
+            closest = columnContainers[i];
+          }
+        }
+        return [{ id: closest.id, data: { droppableContainer: closest } }];
       }
       const pointerCollisions = pointerWithin(args);
       if (pointerCollisions.length > 0) return pointerCollisions;
       return rectIntersection(args);
     },
-    [activeColumn],
+    [activeColumn, isColumnLayoutVertical],
   );
 
   // --- Task handlers ---
@@ -597,7 +615,7 @@ export default function App() {
           >
             <SortableContext
               items={columns.map((c) => `column-${c.id}`)}
-              strategy={horizontalListSortingStrategy}
+              strategy={isColumnLayoutVertical ? verticalListSortingStrategy : horizontalListSortingStrategy}
             >
               <div className={`board${activeTask || activeColumn ? ' board-dragging' : ''}`}>
                 {columns.map((column) => (
