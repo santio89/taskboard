@@ -43,11 +43,12 @@
   --tag-bg: #ede9fe;
   --tag-text: #5b21b6;
 
-  --column-bg: rgba(0, 0, 0, 0.02);
+  --column-bg: #f0f0f2;
   --card-bg: #f7f7f8;
 
   --scrollbar-thumb: #c7c7cc;
   --scrollbar-track: transparent;
+  --bg-dot: rgba(0, 0, 0, 0.10);
 }
 
 [data-theme="dark"] {
@@ -94,6 +95,7 @@
   --scrollbar-track: transparent;
 
   --date-icon-filter: invert(1);
+  --bg-dot: rgba(255, 255, 255, 0.08);
 }
 
 /* ============================================
@@ -160,7 +162,7 @@ body {
     "Segoe UI",
     Roboto,
     sans-serif;
-  background: var(--bg-primary);
+  background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
   transition:
@@ -199,12 +201,35 @@ body {
    App Layout
    ============================================ */
 .app {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
   padding-bottom: 16px;
   box-sizing: border-box;
+}
+
+.app::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, var(--bg-dot) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0;
+  transition: opacity 2s cubic-bezier(0.25, 0.1, 0.25, 1) 0.5s;
+}
+
+body.board-drag-scrolling .app::before {
+  opacity: 1;
+}
+
+.app > .app-header,
+.app > .board-container {
+  position: relative;
+  z-index: 1;
 }
 
 /* ============================================

@@ -72,9 +72,11 @@ export default function App() {
       scrollTop: el.scrollTop,
     };
     el.classList.add('board-container-drag-scroll');
+    document.body.classList.add('board-drag-scrolling');
     const cleanup = () => {
       dragScrollRef.current = null;
       boardContainerRef.current?.classList.remove('board-container-drag-scroll');
+      document.body.classList.remove('board-drag-scrolling');
       window.removeEventListener('mouseup', cleanup);
     };
     window.addEventListener('mouseup', cleanup);
