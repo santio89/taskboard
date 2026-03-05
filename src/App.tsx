@@ -530,15 +530,15 @@ export default function App() {
           </svg>
           <h1>TASKBOARD</h1>
         </div>
-        <SearchBar
-          search={search}
-          onSearchChange={setSearch}
-          priorityFilter={priorityFilter}
-          onPriorityFilterChange={setPriorityFilter}
-          expanded={searchExpanded}
-          onExpandedChange={setSearchExpanded}
-        />
         <div className="header-right">
+          <SearchBar
+            search={search}
+            onSearchChange={setSearch}
+            priorityFilter={priorityFilter}
+            onPriorityFilterChange={setPriorityFilter}
+            expanded={searchExpanded}
+            onExpandedChange={setSearchExpanded}
+          />
           <span className="task-count">{tasks.length} tasks</span>
           <button className="btn btn-secondary btn-sm has-tooltip" onClick={() => setAnalyticsOpen(true)} aria-label="Analytics" data-tooltip="Analytics">
             <BarChart3 size={16} />

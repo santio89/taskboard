@@ -265,17 +265,8 @@ body {
 /* ============================================
    Search & Filter
    ============================================ */
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin: 0 8px;
-}
-
-.search-bar.expanded {
-  flex: 1;
-  max-width: 480px;
-  margin: 0 20px;
+.search-popover-anchor {
+  position: relative;
 }
 
 .search-toggle,
@@ -291,30 +282,12 @@ body {
   color: var(--text-secondary);
   cursor: pointer;
   position: relative;
-  opacity: 1;
-  transform: scale(1);
+  aspect-ratio: 1;
   transition:
-    opacity 0.2s var(--ease),
-    transform 0.2s var(--ease),
     background-color 0.2s var(--ease),
     border-color 0.2s var(--ease),
-    color 0.2s var(--ease);
-}
-
-.search-toggle,
-.theme-toggle {
-  aspect-ratio: 1;
-}
-
-.search-toggle.search-toggle-hidden {
-  opacity: 0;
-  transform: scale(0.8);
-  width: 0;
-  overflow: hidden;
-  pointer-events: none;
-  padding: 0;
-  border-width: 0;
-  margin: 0;
+    color 0.2s var(--ease),
+    transform 0.15s var(--ease);
 }
 
 .search-toggle:hover,
@@ -346,23 +319,30 @@ body {
   border: 2px solid var(--card-bg);
 }
 
-.search-input-wrap {
-  position: relative;
-  flex: 0 0 0px;
-  max-width: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition:
-    max-width 0.3s var(--ease-out),
-    flex 0.3s var(--ease-out),
-    opacity 0.2s var(--ease);
+.search-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  padding: 12px;
+  background: var(--column-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: popover-in 0.15s var(--ease-out);
 }
 
-.search-input-wrap.search-input-visible {
-  flex: 1;
-  max-width: 480px;
-  opacity: 1;
-  overflow: visible;
+@keyframes popover-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.search-popover-input-wrap {
+  position: relative;
 }
 
 .search-icon {
@@ -384,6 +364,7 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   outline: none;
+  box-sizing: border-box;
   transition:
     border-color 0.2s var(--ease),
     box-shadow 0.2s var(--ease),
@@ -418,10 +399,9 @@ body {
   color: var(--text-primary);
 }
 
-.filter-pills {
+.search-popover-filters {
   display: flex;
   gap: 4px;
-  flex-shrink: 0;
 }
 
 .filter-pill {
@@ -437,6 +417,7 @@ body {
   background: var(--card-bg);
   color: var(--text-tertiary);
   cursor: pointer;
+  flex: 1;
   transition:
     background-color 0.2s var(--ease),
     color 0.2s var(--ease),
@@ -2456,24 +2437,6 @@ label.attachment-drop-zone.drag-over {
 
   .header-left h1 {
     font-size: 1.1rem;
-  }
-
-  .search-bar {
-    margin: 0;
-    min-width: 0;
-  }
-
-  .search-bar.expanded {
-    order: 3;
-    max-width: 100%;
-    margin: 0;
-    flex-basis: 100%;
-  }
-
-  .filter-pills {
-    flex-wrap: wrap;
-    min-width: 0;
-    flex-shrink: 1;
   }
 
   .header-right {

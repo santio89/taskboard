@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { Search, X } from 'lucide-react';
 import type { Priority } from '../types';
 
@@ -13,63 +13,80 @@ interface SearchBarProps {
 
 export function SearchBar({ search, onSearchChange, priorityFilter, onPriorityFilterChange, expanded, onExpandedChange }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (expanded) {
-      inputRef.current?.focus();
+      requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [expanded]);
 
-  const handleCollapse = () => {
-    if (!search) {
+  const handleClickOutside = useCallback((e: MouseEvent) => {
+    if (
+      popoverRef.current && !popoverRef.current.contains(e.target as Node) &&
+      triggerRef.current && !triggerRef.current.contains(e.target as Node)
+    ) {
       onExpandedChange(false);
     }
-  };
+  }, [onExpandedChange]);
+
+  useEffect(() => {
+    if (expanded) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [expanded, handleClickOutside]);
+
+  const hasActiveFilter = !!(search || priorityFilter);
 
   return (
-    <div className={`search-bar ${expanded ? 'expanded' : ''}`}>
+    <div className="search-popover-anchor">
       <button
-        className={`search-toggle has-tooltip ${search || priorityFilter ? 'has-filter' : ''} ${expanded ? 'search-toggle-hidden' : ''}`}
-        onClick={() => onExpandedChange(true)}
-        aria-label="Open search"
+        ref={triggerRef}
+        className={`search-toggle has-tooltip ${hasActiveFilter ? 'has-filter' : ''}`}
+        onClick={() => onExpandedChange(!expanded)}
+        aria-label="Search & filter"
         data-tooltip="Search"
-        tabIndex={expanded ? -1 : 0}
       >
         <Search size={16} />
       </button>
-      <div className={`search-input-wrap ${expanded ? 'search-input-visible' : ''}`}>
-        <Search size={15} className="search-icon" />
-        <input
-          ref={inputRef}
-          type="text"
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          onBlur={handleCollapse}
-          placeholder="Search tasks..."
-          className="search-input"
-          tabIndex={expanded ? 0 : -1}
-        />
-        <button
-          className="search-clear"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => { onSearchChange(''); onExpandedChange(false); }}
-          aria-label="Close search"
-          tabIndex={expanded ? 0 : -1}
-        >
-          <X size={14} />
-        </button>
-      </div>
-      <div className="filter-pills">
-        {(['', 'high', 'medium', 'low'] as const).map((p) => (
-          <button
-            key={p}
-            className={`filter-pill ${priorityFilter === p ? 'active' : ''}`}
-            onClick={() => onPriorityFilterChange(p)}
-          >
-            {p === '' ? 'All' : p.charAt(0).toUpperCase() + p.slice(1)}
-          </button>
-        ))}
-      </div>
+
+      {expanded && (
+        <div ref={popoverRef} className="search-popover">
+          <div className="search-popover-input-wrap">
+            <Search size={15} className="search-icon" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={search}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder="Search tasks..."
+              className="search-input"
+            />
+            {search && (
+              <button
+                className="search-clear"
+                onClick={() => onSearchChange('')}
+                aria-label="Clear search"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+          <div className="search-popover-filters">
+            {(['', 'high', 'medium', 'low'] as const).map((p) => (
+              <button
+                key={p}
+                className={`filter-pill ${priorityFilter === p ? 'active' : ''}`}
+                onClick={() => onPriorityFilterChange(p)}
+              >
+                {p === '' ? 'All' : p.charAt(0).toUpperCase() + p.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -76,10 +76,10 @@ describe('SearchBar', () => {
         onExpandedChange={() => {}}
       />
     );
-    expect(screen.getByLabelText('Open search')).toBeInTheDocument();
+    expect(screen.getByLabelText('Search & filter')).toBeInTheDocument();
   });
 
-  it('renders input when expanded', () => {
+  it('renders input and filter pills when expanded', () => {
     render(
       <SearchBar
         search=""
@@ -91,19 +91,6 @@ describe('SearchBar', () => {
       />
     );
     expect(screen.getByPlaceholderText('Search tasks...')).toBeInTheDocument();
-  });
-
-  it('renders filter pills', () => {
-    render(
-      <SearchBar
-        search=""
-        onSearchChange={() => {}}
-        priorityFilter=""
-        onPriorityFilterChange={() => {}}
-        expanded={false}
-        onExpandedChange={() => {}}
-      />
-    );
     expect(screen.getByText('All')).toBeInTheDocument();
     expect(screen.getByText('High')).toBeInTheDocument();
     expect(screen.getByText('Medium')).toBeInTheDocument();
@@ -118,7 +105,7 @@ describe('SearchBar', () => {
         onSearchChange={() => {}}
         priorityFilter=""
         onPriorityFilterChange={onChange}
-        expanded={false}
+        expanded={true}
         onExpandedChange={() => {}}
       />
     );
@@ -126,7 +113,7 @@ describe('SearchBar', () => {
     expect(onChange).toHaveBeenCalledWith('high');
   });
 
-  it('calls onExpandedChange when toggle is clicked', () => {
+  it('toggles expanded when toggle is clicked', () => {
     const onExpand = vi.fn();
     render(
       <SearchBar
@@ -138,7 +125,7 @@ describe('SearchBar', () => {
         onExpandedChange={onExpand}
       />
     );
-    fireEvent.click(screen.getByLabelText('Open search'));
+    fireEvent.click(screen.getByLabelText('Search & filter'));
     expect(onExpand).toHaveBeenCalledWith(true);
   });
 });
