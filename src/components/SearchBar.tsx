@@ -9,9 +9,10 @@ interface SearchBarProps {
   onPriorityFilterChange: (value: Priority | '') => void;
   expanded: boolean;
   onExpandedChange: (expanded: boolean) => void;
+  taskCount: number;
 }
 
-export function SearchBar({ search, onSearchChange, priorityFilter, onPriorityFilterChange, expanded, onExpandedChange }: SearchBarProps) {
+export function SearchBar({ search, onSearchChange, priorityFilter, onPriorityFilterChange, expanded, onExpandedChange, taskCount }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -39,6 +40,11 @@ export function SearchBar({ search, onSearchChange, priorityFilter, onPriorityFi
   }, [expanded, handleClickOutside]);
 
   const hasActiveFilter = !!(search || priorityFilter);
+
+  const handleClearAll = useCallback(() => {
+    onSearchChange('');
+    onPriorityFilterChange('');
+  }, [onSearchChange, onPriorityFilterChange]);
 
   return (
     <div className="search-popover-anchor">
@@ -84,6 +90,17 @@ export function SearchBar({ search, onSearchChange, priorityFilter, onPriorityFi
                 {p === '' ? 'All' : p.charAt(0).toUpperCase() + p.slice(1)}
               </button>
             ))}
+          </div>
+          <div className="search-popover-result-row">
+            <span className="search-popover-task-count">Result: {taskCount} tasks</span>
+            <button
+              type="button"
+              className="search-popover-clear-all"
+              onClick={handleClearAll}
+              aria-label="Clear all filters"
+            >
+              Clear
+            </button>
           </div>
         </div>
       )}

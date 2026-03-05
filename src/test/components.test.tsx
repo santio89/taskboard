@@ -74,6 +74,7 @@ describe('SearchBar', () => {
         onPriorityFilterChange={() => {}}
         expanded={false}
         onExpandedChange={() => {}}
+        taskCount={0}
       />
     );
     expect(screen.getByLabelText('Search & filter')).toBeInTheDocument();
@@ -88,6 +89,7 @@ describe('SearchBar', () => {
         onPriorityFilterChange={() => {}}
         expanded={true}
         onExpandedChange={() => {}}
+        taskCount={0}
       />
     );
     expect(screen.getByPlaceholderText('Search tasks...')).toBeInTheDocument();
@@ -95,6 +97,7 @@ describe('SearchBar', () => {
     expect(screen.getByText('High')).toBeInTheDocument();
     expect(screen.getByText('Medium')).toBeInTheDocument();
     expect(screen.getByText('Low')).toBeInTheDocument();
+    expect(screen.getByText('Result: 0 tasks')).toBeInTheDocument();
   });
 
   it('calls onPriorityFilterChange when pill is clicked', () => {
@@ -107,6 +110,7 @@ describe('SearchBar', () => {
         onPriorityFilterChange={onChange}
         expanded={true}
         onExpandedChange={() => {}}
+        taskCount={0}
       />
     );
     fireEvent.click(screen.getByText('High'));
@@ -123,6 +127,7 @@ describe('SearchBar', () => {
         onPriorityFilterChange={() => {}}
         expanded={false}
         onExpandedChange={onExpand}
+        taskCount={0}
       />
     );
     fireEvent.click(screen.getByLabelText('Search & filter'));

@@ -121,6 +121,11 @@ export default function App() {
     return map;
   }, [tasks, columns, search, priorityFilter]);
 
+  const filteredTaskCount = useMemo(
+    () => Object.values(tasksByColumn).reduce((sum, arr) => sum + arr.length, 0),
+    [tasksByColumn]
+  );
+
   const refreshTasks = useCallback(() => setTasks(taskStore.getTasks()), []);
   const refreshColumns = useCallback(() => setColumns(columnStore.getColumns()), []);
 
@@ -558,8 +563,8 @@ export default function App() {
             onPriorityFilterChange={setPriorityFilter}
             expanded={searchExpanded}
             onExpandedChange={setSearchExpanded}
+            taskCount={filteredTaskCount}
           />
-          <span className="task-count">{tasks.length} tasks</span>
           <button className="btn btn-secondary btn-sm has-tooltip" onClick={() => setAnalyticsOpen(true)} aria-label="Analytics" data-tooltip="Analytics">
             <BarChart3 size={16} />
           </button>
@@ -575,7 +580,7 @@ export default function App() {
             <LayoutTemplate size={15} /> Presets
           </button>
           <button className="btn btn-primary btn-sm" onClick={handleOpenAddColumn}>
-            <Plus size={16} /> Add Column
+            <Plus size={16} /><span className="btn-label"> Add Column</span>
           </button>
           <button className="theme-toggle has-tooltip" onClick={toggleTheme} aria-label="Toggle theme" data-tooltip="Toggle theme">
             {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
