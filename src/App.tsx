@@ -25,13 +25,23 @@ import * as attachmentStore from './store/attachmentStore';
 import { SearchBar } from './components/SearchBar';
 import { Tooltip } from './components/Tooltip';
 import { fireConfetti } from './utils/confetti';
-import { AnalyticsModal } from './components/AnalyticsModal';
+import { BasicAnalyticsModal } from './components/BasicAnalyticsModal';
+import { AdvancedAnalyticsModal } from './components/AdvancedAnalyticsModal';
 import { ToastContainer } from './components/Toast';
 import { showToast } from './utils/toast';
-import { Sun, Moon, Plus, Columns3, LayoutTemplate, Download, Upload, BarChart3, ChevronDown } from 'lucide-react';
+import { Plus, Columns3, LayoutTemplate, Download, Upload, BarChart3, ChevronDown, Settings, ArrowLeftRight } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { SettingsPopup } from './components/SettingsPopup';
+import { useSettings } from './hooks/useSettings';
+import { setLanguage, t } from './utils/i18n';
 
 export default function App() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme, toggleTheme } = useTheme();
+  const { settings, updateSettings } = useSettings();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [transferMenuOpen, setTransferMenuOpen] = useState(false);
+
+  setLanguage(settings.language);
   const [tasks, setTasks] = useState<Task[]>(() => taskStore.getTasks());
   const [columns, setColumns] = useState<Column[]>(() => columnStore.getColumns());
   const [activeTask, setActiveTask] = useState<Task | null>(null);
@@ -43,7 +53,9 @@ export default function App() {
   const [columnModalOpen, setColumnModalOpen] = useState(false);
   const [presetsModalOpen, setPresetsModalOpen] = useState(false);
   const [columnsMenuOpen, setColumnsMenuOpen] = useState(false);
-  const [analyticsOpen, setAnalyticsOpen] = useState(false);
+  const [analyticsMenuOpen, setAnalyticsMenuOpen] = useState(false);
+  const [basicAnalyticsOpen, setBasicAnalyticsOpen] = useState(false);
+  const [advancedAnalyticsOpen, setAdvancedAnalyticsOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [editingColumn, setEditingColumn] = useState<Column | null>(null);
   const [defaultColumnId, setDefaultColumnId] = useState('');
@@ -62,6 +74,9 @@ export default function App() {
   const boardContainerRef = useRef<HTMLElement>(null);
   const dragScrollRef = useRef<{ startX: number; startY: number; scrollLeft: number; scrollTop: number } | null>(null);
   const columnsMenuRef = useRef<HTMLDivElement>(null);
+  const settingsRef = useRef<HTMLDivElement>(null);
+  const transferRef = useRef<HTMLDivElement>(null);
+  const analyticsMenuRef = useRef<HTMLDivElement>(null);
 
   const [isColumnLayoutVertical, setIsColumnLayoutVertical] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
@@ -84,6 +99,42 @@ export default function App() {
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [columnsMenuOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (settingsRef.current && !settingsRef.current.contains(e.target as Node)) {
+        setSettingsOpen(false);
+      }
+    };
+    if (settingsOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [settingsOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (transferRef.current && !transferRef.current.contains(e.target as Node)) {
+        setTransferMenuOpen(false);
+      }
+    };
+    if (transferMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [transferMenuOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (analyticsMenuRef.current && !analyticsMenuRef.current.contains(e.target as Node)) {
+        setAnalyticsMenuOpen(false);
+      }
+    };
+    if (analyticsMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [analyticsMenuOpen]);
 
   const handleBoardMouseDown = useCallback((e: React.MouseEvent<HTMLElement>) => {
     if (e.button !== 0) return;
@@ -194,7 +245,7 @@ export default function App() {
 
   const handleOpenAddTaskFromHeader = () => {
     if (columns.length === 0) {
-      showToast('Add a column first to create tasks', 'info');
+      showToast(t('toast.addColumnFirst'), 'info');
       setColumnsMenuOpen(true);
       return;
     }
@@ -251,7 +302,7 @@ export default function App() {
       setTaskModalOpen(false);
       setEditingTask(null);
     } catch {
-      showToast('Failed to save task', 'error');
+      showToast(t('toast.saveError'), 'error');
     }
   };
 
@@ -525,12 +576,24 @@ export default function App() {
   };
 
   useEffect(() => {
-    const isAnyModalOpen = () => taskModalOpen || columnModalOpen || presetsModalOpen || confirmState.open || analyticsOpen;
+    const isAnyModalOpen = () => taskModalOpen || columnModalOpen || presetsModalOpen || confirmState.open || basicAnalyticsOpen || advancedAnalyticsOpen;
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable;
 
       if (e.key === 'Escape') {
+        if (analyticsMenuOpen) {
+          setAnalyticsMenuOpen(false);
+          return;
+        }
+        if (transferMenuOpen) {
+          setTransferMenuOpen(false);
+          return;
+        }
+        if (settingsOpen) {
+          setSettingsOpen(false);
+          return;
+        }
         if (columnsMenuOpen) {
           setColumnsMenuOpen(false);
           return;
@@ -541,7 +604,8 @@ export default function App() {
           setColumnModalOpen(false);
           setEditingColumn(null);
           setPresetsModalOpen(false);
-          setAnalyticsOpen(false);
+          setBasicAnalyticsOpen(false);
+          setAdvancedAnalyticsOpen(false);
           setConfirmState((s) => ({ ...s, open: false }));
           return;
         }
@@ -570,7 +634,7 @@ export default function App() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [taskModalOpen, columnModalOpen, presetsModalOpen, columnsMenuOpen, confirmState.open, analyticsOpen, searchExpanded, columns, toggleTheme]);
+  }, [taskModalOpen, columnModalOpen, presetsModalOpen, columnsMenuOpen, confirmState.open, basicAnalyticsOpen, advancedAnalyticsOpen, analyticsMenuOpen, settingsOpen, transferMenuOpen, searchExpanded, columns, toggleTheme]);
 
   return (
     <div className="app">
@@ -600,16 +664,51 @@ export default function App() {
             onExpandedChange={setSearchExpanded}
             taskCount={filteredTaskCount}
           />
-          <button className="btn btn-secondary btn-sm has-tooltip" onClick={() => setAnalyticsOpen(true)} aria-label="Analytics" data-tooltip="Analytics">
-            <BarChart3 size={16} />
-          </button>
-          <div className="btn-group">
-            <button className="btn btn-secondary btn-sm has-tooltip" onClick={handleExport} aria-label="Export board" data-tooltip="Export">
-              <Download size={16} />
+          <div className="header-analytics-wrap" ref={analyticsMenuRef}>
+            <button
+              type="button"
+              className={`btn btn-secondary btn-sm has-tooltip ${analyticsMenuOpen ? 'open' : ''}`}
+              onClick={() => setAnalyticsMenuOpen((o) => !o)}
+              aria-label={t('header.analytics')}
+              data-tooltip={t('header.analytics')}
+              aria-expanded={analyticsMenuOpen}
+              aria-haspopup="true"
+            >
+              <BarChart3 size={16} />
             </button>
-            <button className="btn btn-secondary btn-sm has-tooltip" onClick={handleImport} aria-label="Import board" data-tooltip="Import">
-              <Upload size={16} />
+            {analyticsMenuOpen && (
+              <div className="columns-dropdown">
+                <button type="button" className="columns-dropdown-item" onClick={() => { setBasicAnalyticsOpen(true); setAnalyticsMenuOpen(false); }}>
+                  <BarChart3 size={16} /> {t('analytics.basic')}
+                </button>
+                <button type="button" className="columns-dropdown-item" onClick={() => { setAdvancedAnalyticsOpen(true); setAnalyticsMenuOpen(false); }}>
+                  <BarChart3 size={16} /> {t('analytics.advanced')}
+                </button>
+              </div>
+            )}
+          </div>
+          <div className="header-transfer-wrap" ref={transferRef}>
+            <button
+              type="button"
+              className={`btn btn-secondary btn-sm has-tooltip ${transferMenuOpen ? 'open' : ''}`}
+              onClick={() => setTransferMenuOpen((o) => !o)}
+              aria-label={t('header.transfer')}
+              data-tooltip={t('header.transfer')}
+              aria-expanded={transferMenuOpen}
+              aria-haspopup="true"
+            >
+              <ArrowLeftRight size={16} />
             </button>
+            {transferMenuOpen && (
+              <div className="columns-dropdown">
+                <button type="button" className="columns-dropdown-item" onClick={() => { handleImport(); setTransferMenuOpen(false); }}>
+                  <Upload size={16} /> {t('header.importBoard')}
+                </button>
+                <button type="button" className="columns-dropdown-item" onClick={() => { handleExport(); setTransferMenuOpen(false); }}>
+                  <Download size={16} /> {t('header.exportBoard')}
+                </button>
+              </div>
+            )}
           </div>
           <div className="header-columns-wrap" ref={columnsMenuRef}>
             <button
@@ -619,26 +718,43 @@ export default function App() {
               aria-expanded={columnsMenuOpen}
               aria-haspopup="true"
             >
-              <Columns3 size={15} /> Columns
+              <Columns3 size={15} /> {t('header.columns')}
               <ChevronDown size={14} className={`columns-chevron ${columnsMenuOpen ? 'open' : ''}`} />
             </button>
             {columnsMenuOpen && (
               <div className="columns-dropdown">
                 <button type="button" className="columns-dropdown-item" onClick={handleOpenAddColumn}>
-                  <Plus size={16} /> Add new column
+                  <Plus size={16} /> {t('columns.addNew')}
                 </button>
                 <button type="button" className="columns-dropdown-item" onClick={handleOpenPresetsFromColumns}>
-                  <LayoutTemplate size={16} /> Add preset column
+                  <LayoutTemplate size={16} /> {t('columns.addPreset')}
                 </button>
               </div>
             )}
           </div>
           <button className="btn btn-primary btn-sm" onClick={handleOpenAddTaskFromHeader}>
-            <Plus size={16} /><span className="btn-label"> Add Task</span>
+            <Plus size={16} /><span className="btn-label"> {t('header.addTask')}</span>
           </button>
-          <button className="theme-toggle has-tooltip" onClick={toggleTheme} aria-label="Toggle theme" data-tooltip="Toggle theme">
-            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-          </button>
+          <div className="header-settings-wrap" ref={settingsRef}>
+            <button
+              className="theme-toggle has-tooltip"
+              onClick={() => setSettingsOpen((o) => !o)}
+              aria-label={t('header.settings')}
+              data-tooltip={t('header.settings')}
+              aria-expanded={settingsOpen}
+              aria-haspopup="true"
+            >
+              <Settings size={18} />
+            </button>
+            {settingsOpen && (
+              <SettingsPopup
+                settings={settings}
+                theme={theme}
+                onUpdate={updateSettings}
+                onThemeChange={setTheme}
+              />
+            )}
+          </div>
         </div>
       </header>
 
@@ -653,14 +769,14 @@ export default function App() {
             <div className="empty-board-icon">
               <Columns3 size={48} />
             </div>
-            <h2>No columns yet</h2>
-            <p>Create your first column to start organizing tasks.</p>
+            <h2>{t('empty.title')}</h2>
+            <p>{t('empty.desc')}</p>
             <div className="empty-board-actions">
               <button className="btn btn-secondary" onClick={handleOpenAddColumn}>
-                <Plus size={18} /> Add new column
+                <Plus size={18} /> {t('columns.addNew')}
               </button>
               <button className="btn btn-secondary" onClick={() => setPresetsModalOpen(true)}>
-                <LayoutTemplate size={18} /> Add preset column
+                <LayoutTemplate size={18} /> {t('columns.addPreset')}
               </button>
             </div>
           </div>
@@ -677,19 +793,38 @@ export default function App() {
               strategy={isColumnLayoutVertical ? verticalListSortingStrategy : horizontalListSortingStrategy}
             >
               <div className={`board${activeTask || activeColumn ? ' board-dragging' : ''}`}>
-                {columns.map((column) => (
-                  <KanbanColumn
-                    key={column.id}
-                    column={column}
-                    tasks={tasksByColumn[column.id] ?? []}
-                    isTaskOver={overColumnId === column.id}
-                    onAddTask={handleAddTask}
-                    onEditTask={handleEditTask}
-                    onDeleteTask={handleDeleteTask}
-                    onEditColumn={handleEditColumn}
-                    onDeleteColumn={handleDeleteColumn}
-                  />
-                ))}
+                <AnimatePresence initial={false}>
+                  {columns.map((column) => (
+                    <motion.div
+                      key={column.id}
+                      layout={false}
+                      initial={settings.animationsEnabled ? { opacity: 0, width: 0, scale: 0.98 } : false}
+                      animate={{ opacity: 1, width: 'auto', scale: 1 }}
+                      exit={settings.animationsEnabled ? {
+                        opacity: 0,
+                        width: 0,
+                        scale: 0.98,
+                        transition: { duration: 0.14, ease: [0.4, 0, 1, 1] },
+                      } : { opacity: 0, width: 0, transition: { duration: 0 } }}
+                      transition={settings.animationsEnabled ? { duration: 0.14, ease: [0, 0, 0.6, 1] } : { duration: 0 }}
+                      className="board-column-wrap"
+                      style={{ overflow: (activeTask || activeColumn) ? 'visible' : 'hidden' }}
+                    >
+                      <KanbanColumn
+                        column={column}
+                        tasks={tasksByColumn[column.id] ?? []}
+                        isTaskOver={overColumnId === column.id}
+                        isDragActive={!!activeTask || !!activeColumn}
+                        animationsEnabled={settings.animationsEnabled}
+                        onAddTask={handleAddTask}
+                        onEditTask={handleEditTask}
+                        onDeleteTask={handleDeleteTask}
+                        onEditColumn={handleEditColumn}
+                        onDeleteColumn={handleDeleteColumn}
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </SortableContext>
 
@@ -764,11 +899,18 @@ export default function App() {
         onCancel={closeConfirm}
       />
 
-      <AnalyticsModal
-        isOpen={analyticsOpen}
+      <BasicAnalyticsModal
+        isOpen={basicAnalyticsOpen}
         tasks={tasks}
         columns={columns}
-        onClose={() => setAnalyticsOpen(false)}
+        onClose={() => setBasicAnalyticsOpen(false)}
+      />
+
+      <AdvancedAnalyticsModal
+        isOpen={advancedAnalyticsOpen}
+        tasks={tasks}
+        columns={columns}
+        onClose={() => setAdvancedAnalyticsOpen(false)}
       />
 
       <ToastContainer />

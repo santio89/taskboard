@@ -3,16 +3,20 @@ import { useDroppable } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { AnimatePresence, motion } from 'framer-motion';
 import type { Task, Column } from '../types';
 import * as columnStore from '../store/columnStore';
 import { TaskCard } from './TaskCard';
 import { Tooltip } from './Tooltip';
 import { Plus, GripHorizontal, Trash2, Scan, ChevronDown } from 'lucide-react';
+import { t } from '../utils/i18n';
 
 interface KanbanColumnProps {
   column: Column;
   tasks: Task[];
   isTaskOver?: boolean;
+  isDragActive?: boolean;
+  animationsEnabled?: boolean;
   onAddTask: (columnId: string) => void;
   onEditTask: (task: Task) => void;
   onDeleteTask: (id: string) => void;
@@ -20,7 +24,7 @@ interface KanbanColumnProps {
   onDeleteColumn: (id: string) => void;
 }
 
-export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask, onDeleteTask, onEditColumn, onDeleteColumn }: KanbanColumnProps) {
+export function KanbanColumn({ column, tasks, isTaskOver, isDragActive, animationsEnabled = true, onAddTask, onEditTask, onDeleteTask, onEditColumn, onDeleteColumn }: KanbanColumnProps) {
   const [collapsed, setCollapsed] = useState(() => columnStore.getColumnCollapsed(column.id));
   const { setNodeRef: setDroppableRef } = useDroppable({ id: `column-drop-${column.id}` });
 
@@ -65,7 +69,7 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
     >
       <div className="column-header">
         <div className="column-title-group">
-          <button className="column-drag-handle" {...listeners} aria-label="Drag to reorder column">
+          <button className="column-drag-handle" {...listeners} aria-label={t('column.dragReorder')}>
             <GripHorizontal size={14} />
           </button>
           <span className="column-dot" style={{ backgroundColor: column.color, boxShadow: `0 0 6px ${column.color}bf, 0 0 10px ${column.color}66` }} />
@@ -81,20 +85,20 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
           <button
             className="icon-btn has-tooltip"
             onClick={() => onEditColumn(column)}
-            aria-label="Open column"
-            data-tooltip="Open column"
+            aria-label={t('column.open')}
+            data-tooltip={t('column.open')}
           >
             <Scan size={13} />
           </button>
           <button
             className="icon-btn danger has-tooltip"
             onClick={() => onDeleteColumn(column.id)}
-            aria-label="Delete column"
-            data-tooltip="Delete column"
+            aria-label={t('column.delete')}
+            data-tooltip={t('column.delete')}
           >
             <Trash2 size={13} />
           </button>
-          <button className="icon-btn add-btn has-tooltip" onClick={() => onAddTask(column.id)} aria-label="Add task" data-tooltip="Add task">
+          <button className="icon-btn add-btn has-tooltip" onClick={() => onAddTask(column.id)} aria-label={t('column.addTask')} data-tooltip={t('column.addTask')}>
             <Plus size={18} />
           </button>
         </div>
@@ -103,13 +107,30 @@ export function KanbanColumn({ column, tasks, isTaskOver, onAddTask, onEditTask,
       <div className={`column-body ${collapsed ? 'collapsed' : ''}`}>
         <div ref={setDroppableRef} className="column-tasks">
           <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-            {tasks.map((task) => (
-              <TaskCard key={task.id} task={task} highlightColor={isTaskOver ? column.color : null} onEdit={onEditTask} onDelete={onDeleteTask} />
-            ))}
+            <AnimatePresence initial={false}>
+              {tasks.map((task) => (
+                <motion.div
+                  key={task.id}
+                  layout={false}
+                  initial={animationsEnabled ? { opacity: 0, height: 0, scale: 0.98 } : false}
+                  animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                  exit={animationsEnabled ? {
+                    opacity: 0,
+                    height: 0,
+                    scale: 0.98,
+                    transition: { duration: 0.14, ease: [0.4, 0, 1, 1] },
+                  } : { opacity: 0, height: 0, transition: { duration: 0 } }}
+                  transition={animationsEnabled ? { duration: 0.14, ease: [0, 0, 0.6, 1] } : { duration: 0 }}
+                  style={{ overflow: isDragActive ? 'visible' : 'hidden' }}
+                >
+                  <TaskCard task={task} highlightColor={isTaskOver ? column.color : null} onEdit={onEditTask} onDelete={onDeleteTask} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </SortableContext>
           {tasks.length === 0 && (
             <div className="column-empty">
-              <p>No tasks yet</p>
+              <p>{t('column.noTasks')}</p>
             </div>
           )}
         </div>

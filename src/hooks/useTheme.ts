@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark';
 
 const THEME_KEY = 'kanban-theme';
 
@@ -18,7 +18,8 @@ export function useTheme() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  const setThemeValue = (value: Theme) => setTheme(value);
   const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
 
-  return { theme, toggleTheme };
+  return { theme, setTheme: setThemeValue, toggleTheme };
 }

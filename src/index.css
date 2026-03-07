@@ -365,7 +365,9 @@ body.board-drag-scrolling .app::before {
   min-height: 32px;
 }
 
-.header-columns-wrap {
+.header-columns-wrap,
+.header-transfer-wrap,
+.header-analytics-wrap {
   position: relative;
   display: flex;
   align-items: center;
@@ -398,6 +400,14 @@ body.board-drag-scrolling .app::before {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   z-index: 1000;
   animation: popover-in 0.15s var(--ease-out);
+}
+
+/* Analytics and Transfer: below and to the right, like search popover */
+.header-analytics-wrap .columns-dropdown,
+.header-transfer-wrap .columns-dropdown {
+  top: calc(100% + 6px);
+  left: 0;
+  right: auto;
 }
 
 .columns-dropdown-item {
@@ -634,6 +644,10 @@ body.board-drag-scrolling .app::before {
   margin: 0 auto;
 }
 
+.board-column-wrap {
+  flex-shrink: 0;
+}
+
 /* ============================================
    Empty Board
    ============================================ */
@@ -696,9 +710,9 @@ body.board-drag-scrolling .app::before {
   border: 1px solid var(--border-color);
   transition:
     transform 200ms cubic-bezier(0.22, 0.68, 0, 1),
+    opacity 0.25s var(--ease),
     border-color 0.25s var(--ease),
     box-shadow 0.25s var(--ease),
-    opacity 0.2s var(--ease),
     background-color 0.25s var(--ease);
 }
 
@@ -890,9 +904,9 @@ body.board-drag-scrolling .app::before {
   position: relative;
   transition:
     transform 200ms cubic-bezier(0.22, 0.68, 0, 1),
+    opacity 0.25s var(--ease),
     border-color 0.2s ease,
     background-color 0.2s ease,
-    opacity 0.2s ease,
     translate 0.2s cubic-bezier(0.22, 0.68, 0, 1);
 }
 
@@ -1185,8 +1199,10 @@ body.board-drag-scrolling .app::before {
   align-items: center;
   justify-content: center;
   z-index: 100;
+  padding: 16px;
   animation: fadeIn 0.2s var(--ease);
   backdrop-filter: blur(8px);
+  box-sizing: border-box;
 }
 
 .modal {
@@ -1646,6 +1662,99 @@ body.board-drag-scrolling .app::before {
 }
 
 /* ============================================
+   Settings Popup
+   ============================================ */
+.header-settings-wrap {
+  position: relative;
+}
+
+.settings-popup {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 260px;
+  padding: 12px;
+  background: var(--column-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.settings-popup-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-popup-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.settings-popup-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.settings-lang-group {
+  display: flex;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.settings-lang-btn {
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: none;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.settings-lang-btn + .settings-lang-btn {
+  border-left: 1px solid var(--border-color);
+}
+
+.settings-lang-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.settings-lang-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ============================================
+   No Animations Mode
+   ============================================ */
+.no-animations,
+.no-animations *,
+.no-animations *::before,
+.no-animations *::after {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
+/* ============================================
    Empty Board Actions
    ============================================ */
 .empty-board-actions {
@@ -2029,20 +2138,33 @@ label.attachment-drop-zone.drag-over {
    ============================================ */
 .modal.modal-analytics {
   max-width: 720px;
+  width: 100%;
   min-height: auto;
   max-height: 90vh;
+  overflow-x: hidden;
   overflow-y: auto;
+  min-width: 0;
+}
+
+.modal.modal-analytics-advanced {
+  max-width: 860px;
+}
+
+.analytics-stats-6 {
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
 }
 
 .analytics-content {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .analytics-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 10px;
 }
 
@@ -2054,6 +2176,7 @@ label.attachment-drop-zone.drag-over {
   border-radius: 10px;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
+  min-width: 0;
   transition:
     transform 0.2s var(--ease-out),
     box-shadow 0.2s var(--ease);
@@ -2092,13 +2215,16 @@ label.attachment-drop-zone.drag-over {
   font-size: 0.68rem;
   font-weight: 500;
   color: var(--text-tertiary);
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.2;
 }
 
 .analytics-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 12px;
+  min-width: 0;
 }
 
 .analytics-card {
@@ -2106,6 +2232,8 @@ label.attachment-drop-zone.drag-over {
   border-radius: 10px;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .analytics-card-wide {
@@ -2133,12 +2261,14 @@ label.attachment-drop-zone.drag-over {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .bar-row {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .bar-label {
@@ -2154,6 +2284,7 @@ label.attachment-drop-zone.drag-over {
 
 .bar-track {
   flex: 1;
+  min-width: 0;
   height: 8px;
   background: var(--bg-hover);
   border-radius: 4px;
@@ -2238,16 +2369,20 @@ label.attachment-drop-zone.drag-over {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
 }
 
 .timeline-svg {
   width: 100%;
   height: 80px;
+  min-width: 0;
 }
 
 .timeline-labels {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 .timeline-label {
@@ -2256,9 +2391,66 @@ label.attachment-drop-zone.drag-over {
   font-weight: 500;
 }
 
+/* Vertical bar chart (age / workload) */
+.age-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+  padding-top: 8px;
+  min-width: 0;
+}
+
+.age-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+}
+
+.age-bar-value {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.age-bar-track {
+  flex: 1;
+  width: 100%;
+  max-width: 28px;
+  background: var(--bg-hover);
+  border-radius: 4px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.age-bar-fill {
+  width: 100%;
+  border-radius: 4px;
+  background: var(--accent);
+  min-height: 3px;
+  transition: height 0.4s var(--ease-out);
+}
+
+.age-bar-fill-alt {
+  background: #3b82f6;
+}
+
+.age-bar-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
-  .analytics-stats {
-    grid-template-columns: repeat(2, 1fr);
+  .analytics-stats,
+  .analytics-stats-6 {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 
   .analytics-grid {
@@ -2629,6 +2821,10 @@ label.attachment-drop-zone.drag-over {
     flex-direction: column;
     width: 100%;
     align-items: stretch;
+  }
+
+  .board-column-wrap {
+    width: 100% !important;
   }
 
   .kanban-column {

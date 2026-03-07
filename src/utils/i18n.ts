@@ -1,0 +1,75 @@
+import type { Language } from '../hooks/useSettings';
+
+const translations: Record<string, Record<Language, string>> = {
+  'app.title': { en: 'TASKBOARD', es: 'TABLERO' },
+  'header.analytics': { en: 'Analytics', es: 'Analíticas' },
+  'header.transfer': { en: 'Transfer', es: 'Transferir' },
+  'header.export': { en: 'Export', es: 'Exportar' },
+  'header.import': { en: 'Import', es: 'Importar' },
+  'header.exportBoard': { en: 'Export board', es: 'Exportar tablero' },
+  'header.importBoard': { en: 'Import board', es: 'Importar tablero' },
+  'header.columns': { en: 'Columns', es: 'Columnas' },
+  'header.addTask': { en: 'Add Task', es: 'Nueva Tarea' },
+  'header.toggleTheme': { en: 'Toggle theme', es: 'Cambiar tema' },
+  'header.settings': { en: 'Settings', es: 'Ajustes' },
+  'columns.addNew': { en: 'Add new column', es: 'Agregar columna' },
+  'columns.addPreset': { en: 'Add preset column', es: 'Agregar columna predefinida' },
+  'empty.title': { en: 'No columns yet', es: 'Sin columnas' },
+  'empty.desc': { en: 'Create your first column to start organizing tasks.', es: 'Crea tu primera columna para empezar a organizar tareas.' },
+  'column.noTasks': { en: 'No tasks yet', es: 'Sin tareas' },
+  'column.addTask': { en: 'Add task', es: 'Agregar tarea' },
+  'column.open': { en: 'Open column', es: 'Abrir columna' },
+  'column.delete': { en: 'Delete column', es: 'Eliminar columna' },
+  'column.dragReorder': { en: 'Drag to reorder column', es: 'Arrastrar para reordenar' },
+  'settings.title': { en: 'Settings', es: 'Ajustes' },
+  'settings.theme': { en: 'Theme', es: 'Tema' },
+  'settings.themeLight': { en: 'Light', es: 'Claro' },
+  'settings.themeDark': { en: 'Dark', es: 'Oscuro' },
+  'settings.language': { en: 'Language', es: 'Idioma' },
+  'settings.animations': { en: 'Animations', es: 'Animaciones' },
+  'settings.animationsDesc': { en: 'Enable transitions and animations', es: 'Habilitar transiciones y animaciones' },
+  'settings.animationsEnabled': { en: 'Enabled', es: 'Activado' },
+  'settings.animationsDisabled': { en: 'Disabled', es: 'Desactivado' },
+  'search.placeholder': { en: 'Search tasks...', es: 'Buscar tareas...' },
+  'search.clear': { en: 'Clear', es: 'Limpiar' },
+  'toast.addColumnFirst': { en: 'Add a column first to create tasks', es: 'Agrega una columna primero para crear tareas' },
+  'toast.importSuccess': { en: 'Board imported successfully', es: 'Tablero importado correctamente' },
+  'toast.importError': { en: 'Invalid file format', es: 'Formato de archivo inválido' },
+  'toast.noData': { en: 'No valid board data found in file', es: 'No se encontraron datos válidos en el archivo' },
+  'toast.saveError': { en: 'Failed to save task', es: 'Error al guardar tarea' },
+  'toast.readError': { en: 'Failed to read file', es: 'Error al leer archivo' },
+  'confirm.deleteTask.title': { en: 'Delete Task', es: 'Eliminar Tarea' },
+  'confirm.deleteColumn.title': { en: 'Delete Column', es: 'Eliminar Columna' },
+  'confirm.delete': { en: 'Delete', es: 'Eliminar' },
+  'analytics.basic': { en: 'Basic analytics', es: 'Analíticas básicas' },
+  'analytics.advanced': { en: 'Advanced analytics', es: 'Analíticas avanzadas' },
+  'analytics.basicTitle': { en: 'Basic Analytics', es: 'Analíticas Básicas' },
+  'analytics.advancedTitle': { en: 'Advanced Analytics', es: 'Analíticas Avanzadas' },
+  'analytics.totalTasks': { en: 'Total Tasks', es: 'Total Tareas' },
+  'analytics.completed': { en: 'Completed', es: 'Completadas' },
+  'analytics.overdue': { en: 'Overdue', es: 'Vencidas' },
+  'analytics.subtasksDone': { en: 'Subtasks Done', es: 'Subtareas Hechas' },
+  'analytics.avgPerColumn': { en: 'Avg / Column', es: 'Prom / Columna' },
+  'analytics.withDueDate': { en: 'With Due Date', es: 'Con Fecha Límite' },
+  'analytics.tasksByColumn': { en: 'Tasks by Column', es: 'Tareas por Columna' },
+  'analytics.priorityBreakdown': { en: 'Priority Breakdown', es: 'Distribución de Prioridad' },
+  'analytics.tasks': { en: 'tasks', es: 'tareas' },
+  'analytics.noColumns': { en: 'No columns', es: 'Sin columnas' },
+  'analytics.noTasks': { en: 'No tasks', es: 'Sin tareas' },
+  'analytics.noData': { en: 'No data yet', es: 'Sin datos aún' },
+  'analytics.timeline': { en: 'Tasks Created (Last 14 days)', es: 'Tareas Creadas (Últimos 14 días)' },
+  'analytics.taskAge': { en: 'Task Age', es: 'Antigüedad de Tareas' },
+  'analytics.today': { en: 'Today', es: 'Hoy' },
+  'analytics.workloadByDay': { en: 'Created by Day of Week', es: 'Creadas por Día de la Semana' },
+  'analytics.topTags': { en: 'Top Tags', es: 'Tags Principales' },
+};
+
+let currentLang: Language = 'en';
+
+export function setLanguage(lang: Language) {
+  currentLang = lang;
+}
+
+export function t(key: string): string {
+  return translations[key]?.[currentLang] ?? key;
+}
