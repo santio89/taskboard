@@ -3,6 +3,8 @@ import type { Task, Priority, Column, Subtask } from '../types';
 import { TITLE_MAX_LENGTH, TAG_AND_ESTIMATE_MAX_LENGTH, TAG_MAX_LENGTH, DESCRIPTION_MAX_LENGTH } from '../types';
 import { X, Plus, FileText, Image, Film, Music, File, Download, Trash2, Check, ChevronDown, GripVertical, Scan } from 'lucide-react';
 import { CustomSelect } from './CustomSelect';
+import { DatePickerPopover } from './DatePickerPopover';
+import { Tooltip } from './Tooltip';
 import type { AttachmentMeta } from '../store/attachmentStore';
 import * as attachmentStore from '../store/attachmentStore';
 import { v4 as uuidv4 } from 'uuid';
@@ -60,7 +62,11 @@ function SortableSubtaskItem({ subtask, onToggle, onRemove, onEdit }: { subtask:
           }}
         />
       ) : (
-        <span className="subtask-title" onDoubleClick={() => setEditing(true)}>{subtask.title}</span>
+        <span className="subtask-title-wrap">
+          <Tooltip text={subtask.title} position="above" className="subtask-title-tooltip">
+            <span className="subtask-title" onDoubleClick={() => setEditing(true)}>{subtask.title}</span>
+          </Tooltip>
+        </span>
       )}
       <div className="subtask-actions">
         {!editing && (
@@ -438,20 +444,22 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="task-start">Start Date</label>
-                  <input
+                  <DatePickerPopover
                     id="task-start"
-                    type="date"
                     value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    onChange={setStartDate}
+                    placeholder="Start date"
+                    title="Start date"
                   />
                 </div>
                 <div className="form-group">
                   <label htmlFor="task-due">Due Date</label>
-                  <input
+                  <DatePickerPopover
                     id="task-due"
-                    type="date"
                     value={dueDate}
-                    onChange={(e) => setDueDate(e.target.value)}
+                    onChange={setDueDate}
+                    placeholder="Due date"
+                    title="Due date"
                   />
                 </div>
               </div>

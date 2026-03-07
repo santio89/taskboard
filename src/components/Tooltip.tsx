@@ -5,9 +5,10 @@ interface TooltipProps {
   text: string;
   children: React.ReactNode;
   position?: 'above' | 'below';
+  className?: string;
 }
 
-export function Tooltip({ text, children, position = 'below' }: TooltipProps) {
+export function Tooltip({ text, children, position = 'below', className }: TooltipProps) {
   const [visible, setVisible] = useState(false);
   const [coords, setCoords] = useState({ left: 0, top: 0 });
   const anchorRef = useRef<HTMLSpanElement>(null);
@@ -62,6 +63,7 @@ export function Tooltip({ text, children, position = 'below' }: TooltipProps) {
         onMouseEnter={show}
         onMouseLeave={hide}
         title=""
+        className={className}
         style={{ display: 'inline-block' }}
       >
         {children}
