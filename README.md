@@ -1,21 +1,17 @@
 # TASKBOARD
 
-Kanban-style task dashboard: React, TypeScript, Vite. Fully client-side, no backend.
+Kanban-style task dashboard: React, TypeScript, Vite.
 
 ## Features
 
-- **Drag & drop** — reorder tasks and columns (dnd-kit + Framer Motion)
-- **Custom columns** — 19 preset colors (2×10 grid) + custom color picker (gradient, hue, RGB, eyedropper); quick-start presets in Columns dropdown
-- **Task management** — title, description, priority, tags, subtasks, dates, estimates, attachments
-- **Custom date picker** — theme-aware Start/Due date calendars; opens above field, portaled
-- **Subtasks** — add, reorder, check off; 2-line clamp + tooltip
-- **Analytics** — Basic & Advanced dashboards (column distribution, priority donut, timeline, task age, workload, top tags)
-- **Search & filter** — expandable popover, priority filters
-- **Settings** — Theme (Light/Dark), Language (EN/ES), Animations on/off
-- **Markdown** — bold, italic, code, strikethrough, links in descriptions
-- **Transfer** — Import/Export board (JSON)
-- **Shortcuts** — `N` new task, `T` theme, `/` search, `Esc` close
-- **Persistence** — localStorage (settings/theme/board), IndexedDB (attachments)
+- **Drag & drop** — Reorder tasks and columns.
+- **Task management** — Title, description, priority, tags, subtasks, dates, attachments.
+- **Analytics** — Charts and dashboards.
+- **Search & filter** — Search tasks, filter by priority.
+- **Settings** — Theme, language, animations.
+- **Transfer** — Import/export board (JSON).
+- **Local Persistence** — localStorage + IndexedDB for attachments.
+- **Shortcuts** — `N` new task, `T` theme, `/` search, `Esc` close.
 
 ## Tech
 
