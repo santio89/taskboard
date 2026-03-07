@@ -1,7 +1,26 @@
 import { useState, useRef, useEffect } from 'react';
 import type { Column } from '../types';
-import { COLUMN_COLORS, TITLE_MAX_LENGTH } from '../types';
+import { COLOR_PICKER_PRESETS, TITLE_MAX_LENGTH } from '../types';
 import { X, Pipette } from 'lucide-react';
+import { ColorPickerPopover } from './ColorPickerPopover';
+
+function normalizeHex(hex: string): string {
+  const m = hex.replace(/^#/, '').match(/^([0-9a-f]{3})$/i);
+  if (m) {
+    const [a, b, c] = m[1];
+    return `#${a}${a}${b}${b}${c}${c}`;
+  }
+  const m6 = hex.replace(/^#/, '').match(/^([0-9a-f]{6})$/i);
+  return m6 ? `#${m6[1]}` : '#000000';
+}
+
+function hexToRgba(hex: string, alpha: number): string {
+  const n = normalizeHex(hex).replace(/^#/, '');
+  const r = parseInt(n.slice(0, 2), 16);
+  const g = parseInt(n.slice(2, 4), 16);
+  const b = parseInt(n.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 interface ColumnModalProps {
   isOpen: boolean;
@@ -12,9 +31,11 @@ interface ColumnModalProps {
 
 export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProps) {
   const [title, setTitle] = useState(() => column?.title ?? '');
-  const [color, setColor] = useState(() => column?.color ?? COLUMN_COLORS[0]);
+  const [color, setColor] = useState(() => column?.color ?? COLOR_PICKER_PRESETS[0]);
   const [error, setError] = useState('');
+  const [customPickerOpen, setCustomPickerOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const customSwatchRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -62,28 +83,47 @@ export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProp
           </div>
 
           <div className="form-group">
-            <label>Color</label>
-            <div className="color-picker">
-              {COLUMN_COLORS.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  className={`color-swatch ${c === color ? 'selected' : ''}`}
-                  style={{ backgroundColor: c }}
-                  onClick={() => setColor(c)}
-                  aria-label={`Select color ${c}`}
-                />
-              ))}
-              <label className="color-swatch custom-color-swatch" style={{ backgroundColor: color }}>
-                <Pipette size={14} />
-                <input
-                  type="color"
-                  value={color}
-                  onChange={(e) => setColor(e.target.value)}
-                  className="color-input-hidden"
-                />
-              </label>
-            </div>
+            <ColorPickerPopover
+              id="col-color"
+              value={color}
+              onChange={setColor}
+              open={customPickerOpen}
+              onClose={() => setCustomPickerOpen(false)}
+              onOpenRequest={() => setCustomPickerOpen(true)}
+              anchorRef={customSwatchRef}
+              renderTrigger={({ onOpen }) => (
+                <>
+                  <label htmlFor="col-color">Color</label>
+                  <div className="color-picker-modal-grid">
+                    <button
+                      ref={customSwatchRef}
+                      type="button"
+                      className="color-picker-modal-custom"
+                      style={{
+                        backgroundColor: normalizeHex(color),
+                        ['--custom-picker-shadow' as string]: `0 2px 10px ${hexToRgba(color, 0.55)}`,
+                        ['--custom-picker-shadow-hover' as string]: `0 2px 14px ${hexToRgba(color, 0.7)}`,
+                      }}
+                      onClick={onOpen}
+                      aria-label="Custom color"
+                      title="Custom color"
+                    >
+                      <Pipette size={16} className="color-picker-modal-custom-icon" />
+                    </button>
+                    {COLOR_PICKER_PRESETS.map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        className={`color-picker-modal-swatch ${normalizeHex(c) === normalizeHex(color) ? 'selected' : ''}`}
+                        style={{ backgroundColor: c }}
+                        onClick={() => setColor(normalizeHex(c))}
+                        aria-label={`Select color ${c}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            />
           </div>
 
           <div className="modal-actions">

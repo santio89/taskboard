@@ -1831,6 +1831,325 @@ body.board-drag-scrolling .app::before {
   padding: 0;
 }
 
+/* Custom color picker popover (theme-aware, same style as date picker) */
+.color-picker-wrap {
+  position: relative;
+}
+
+.color-picker-wrap label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.color-picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  outline: none;
+}
+
+.color-picker-trigger:hover {
+  border-color: var(--border-hover);
+}
+
+.color-picker-trigger[aria-expanded="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
+}
+
+.color-picker-trigger-swatch {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.color-picker-popover {
+  position: absolute;
+  z-index: 1000;
+  min-width: 220px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation: date-picker-popover-in 0.15s var(--ease-out);
+}
+
+.color-picker-popover-fixed {
+  position: fixed;
+  right: auto;
+  width: min-content;
+}
+
+.color-picker-popover-above {
+  transform: translateY(-100%);
+}
+
+.color-picker-popover-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* 11 presets + 1 custom swatch row (in popover – kept for any reuse) */
+.color-picker-presets {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.color-picker-preset-swatch {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto;
+  padding: 0;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease-out);
+  display: block;
+}
+
+.color-picker-preset-swatch:hover {
+  transform: scale(1.08);
+}
+
+.color-picker-preset-swatch.selected {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--bg-secondary);
+}
+
+.color-picker-preset-custom {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto;
+  padding: 0;
+  border-radius: 8px;
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.2s var(--ease-out);
+}
+
+.color-picker-preset-custom:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  transform: scale(1.08);
+}
+
+/* Color grid in New/Edit Column modal (custom first, then 19 presets); flex-wrap to avoid overflow */
+.color-picker-modal-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* Same size for all cells: fixed aspect and min size so preset and custom match */
+.color-picker-modal-swatch,
+.color-picker-modal-custom {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  margin: 0;
+  padding: 0;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.color-picker-modal-swatch {
+  background-color: var(--bg-primary);
+}
+
+.color-picker-modal-swatch:hover,
+.color-picker-modal-custom:hover {
+  transform: scale(1.08);
+}
+
+.color-picker-modal-swatch.selected {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--bg-primary);
+}
+
+/* Custom picker: same border as others; shadow color = current color (set inline via --custom-picker-shadow) */
+.color-picker-modal-custom {
+  border: 2px solid var(--border-color);
+  box-shadow: var(--custom-picker-shadow, 0 2px 10px rgba(0, 0, 0, 0.25));
+}
+
+.color-picker-modal-custom:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--custom-picker-shadow-hover, 0 2px 14px rgba(0, 0, 0, 0.35));
+}
+
+/* Pipette icon visible on both light and dark selected color */
+.color-picker-modal-custom-icon {
+  color: rgba(255, 255, 255, 0.95);
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.9)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+/* Saturation / Lightness box */
+.color-picker-sl-box {
+  position: relative;
+  width: 200px;
+  height: 140px;
+  border-radius: 8px;
+  cursor: crosshair;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border: 1px solid var(--border-color);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.color-picker-sl-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  top: 0;
+}
+
+/* Hue bar row: eyedropper + swatch + hue strip */
+.color-picker-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.color-picker-eyedropper-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.color-picker-eyedropper-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+.color-picker-preview-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.color-picker-hue-bar {
+  position: relative;
+  flex: 1;
+  height: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.color-picker-hue-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+/* RGB inputs */
+.color-picker-rgb-row {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+.color-picker-rgb-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.color-picker-rgb-input {
+  width: 100%;
+  padding: 6px 4px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.color-picker-rgb-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+}
+
+.color-picker-rgb-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
 /* ============================================
    Small Modal
    ============================================ */

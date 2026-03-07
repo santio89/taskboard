@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { SearchBar } from '../components/SearchBar';
 import { ColumnModal } from '../components/ColumnModal';
+import { ColorPickerPopover } from '../components/ColorPickerPopover';
 import { SettingsPopup } from '../components/SettingsPopup';
 import { DatePickerPopover } from '../components/DatePickerPopover';
 import { setLanguage } from '../utils/i18n';
@@ -203,6 +204,67 @@ describe('ColumnModal', () => {
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'My Column' } });
     fireEvent.click(screen.getByText('Add Column'));
     expect(onSave).toHaveBeenCalledWith('My Column', expect.any(String));
+  });
+
+  it('shows Color label and preset grid with custom color button when open', () => {
+    render(
+      <ColumnModal
+        isOpen={true}
+        column={null}
+        onSave={() => {}}
+        onClose={() => {}}
+      />
+    );
+    expect(screen.getByText('Color')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Custom color' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Select color #6b7280' })).toBeInTheDocument();
+  });
+
+  it('calls onSave with selected preset color when a preset swatch is clicked', () => {
+    const onSave = vi.fn();
+    render(
+      <ColumnModal
+        isOpen={true}
+        column={null}
+        onSave={onSave}
+        onClose={() => {}}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Select color #ef4444' }));
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Red Column' } });
+    fireEvent.click(screen.getByText('Add Column'));
+    expect(onSave).toHaveBeenCalledWith('Red Column', '#ef4444');
+  });
+
+  it('opens custom color picker popover when Custom color button is clicked', async () => {
+    render(
+      <ColumnModal
+        isOpen={true}
+        column={null}
+        onSave={() => {}}
+        onClose={() => {}}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Custom color' }));
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: 'Color picker' })).toBeInTheDocument();
+      expect(screen.getByText('Color picker')).toBeInTheDocument();
+    }, { timeout: 500 });
+  });
+});
+
+describe('ColorPickerPopover', () => {
+  it('renders trigger swatch when used without renderTrigger', () => {
+    render(<ColorPickerPopover value="#7c3aed" onChange={() => {}} />);
+    expect(screen.getByRole('button', { name: 'Color picker' })).toBeInTheDocument();
+  });
+
+  it('opens popover with Color picker title when trigger is clicked', async () => {
+    render(<ColorPickerPopover value="#10b981" onChange={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Color picker' }));
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: 'Color picker' })).toBeInTheDocument();
+    }, { timeout: 500 });
   });
 });
 
