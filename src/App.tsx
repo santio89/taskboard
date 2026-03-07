@@ -28,7 +28,7 @@ import { fireConfetti } from './utils/confetti';
 import { AnalyticsModal } from './components/AnalyticsModal';
 import { ToastContainer } from './components/Toast';
 import { showToast } from './utils/toast';
-import { Sun, Moon, Plus, Columns3, LayoutTemplate, Download, Upload, BarChart3 } from 'lucide-react';
+import { Sun, Moon, Plus, Columns3, LayoutTemplate, Download, Upload, BarChart3, ChevronDown } from 'lucide-react';
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
@@ -42,6 +42,7 @@ export default function App() {
   const [taskModalOpen, setTaskModalOpen] = useState(false);
   const [columnModalOpen, setColumnModalOpen] = useState(false);
   const [presetsModalOpen, setPresetsModalOpen] = useState(false);
+  const [columnsMenuOpen, setColumnsMenuOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [editingColumn, setEditingColumn] = useState<Column | null>(null);
@@ -60,6 +61,7 @@ export default function App() {
 
   const boardContainerRef = useRef<HTMLElement>(null);
   const dragScrollRef = useRef<{ startX: number; startY: number; scrollLeft: number; scrollTop: number } | null>(null);
+  const columnsMenuRef = useRef<HTMLDivElement>(null);
 
   const [isColumnLayoutVertical, setIsColumnLayoutVertical] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
@@ -70,6 +72,18 @@ export default function App() {
     mql.addEventListener('change', handler);
     return () => mql.removeEventListener('change', handler);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (columnsMenuRef.current && !columnsMenuRef.current.contains(e.target as Node)) {
+        setColumnsMenuOpen(false);
+      }
+    };
+    if (columnsMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [columnsMenuOpen]);
 
   const handleBoardMouseDown = useCallback((e: React.MouseEvent<HTMLElement>) => {
     if (e.button !== 0) return;
@@ -178,6 +192,17 @@ export default function App() {
     setTaskModalOpen(true);
   };
 
+  const handleOpenAddTaskFromHeader = () => {
+    if (columns.length === 0) {
+      showToast('Add a column first to create tasks', 'info');
+      setColumnsMenuOpen(true);
+      return;
+    }
+    setEditingTask(null);
+    setDefaultColumnId(columns[0]?.id ?? '');
+    setTaskModalOpen(true);
+  };
+
   const handleEditTask = (task: Task) => {
     setEditingTask(task);
     setDefaultColumnId(task.columnId);
@@ -232,8 +257,14 @@ export default function App() {
 
   // --- Column handlers ---
   const handleOpenAddColumn = () => {
+    setColumnsMenuOpen(false);
     setEditingColumn(null);
     setColumnModalOpen(true);
+  };
+
+  const handleOpenPresetsFromColumns = () => {
+    setColumnsMenuOpen(false);
+    setPresetsModalOpen(true);
   };
 
   const handleEditColumn = (column: Column) => {
@@ -500,6 +531,10 @@ export default function App() {
       const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable;
 
       if (e.key === 'Escape') {
+        if (columnsMenuOpen) {
+          setColumnsMenuOpen(false);
+          return;
+        }
         if (isAnyModalOpen()) {
           setTaskModalOpen(false);
           setEditingTask(null);
@@ -535,7 +570,7 @@ export default function App() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [taskModalOpen, columnModalOpen, presetsModalOpen, confirmState.open, analyticsOpen, searchExpanded, columns, toggleTheme]);
+  }, [taskModalOpen, columnModalOpen, presetsModalOpen, columnsMenuOpen, confirmState.open, analyticsOpen, searchExpanded, columns, toggleTheme]);
 
   return (
     <div className="app">
@@ -576,11 +611,30 @@ export default function App() {
               <Upload size={16} />
             </button>
           </div>
-          <button className="btn btn-secondary btn-sm" onClick={() => setPresetsModalOpen(true)}>
-            <LayoutTemplate size={15} /> Presets
-          </button>
-          <button className="btn btn-primary btn-sm" onClick={handleOpenAddColumn}>
-            <Plus size={16} /><span className="btn-label"> Add Column</span>
+          <div className="header-columns-wrap" ref={columnsMenuRef}>
+            <button
+              type="button"
+              className={`btn btn-secondary btn-sm ${columnsMenuOpen ? 'open' : ''}`}
+              onClick={() => setColumnsMenuOpen((o) => !o)}
+              aria-expanded={columnsMenuOpen}
+              aria-haspopup="true"
+            >
+              <Columns3 size={15} /> Columns
+              <ChevronDown size={14} className={`columns-chevron ${columnsMenuOpen ? 'open' : ''}`} />
+            </button>
+            {columnsMenuOpen && (
+              <div className="columns-dropdown">
+                <button type="button" className="columns-dropdown-item" onClick={handleOpenAddColumn}>
+                  <Plus size={16} /> Add new column
+                </button>
+                <button type="button" className="columns-dropdown-item" onClick={handleOpenPresetsFromColumns}>
+                  <LayoutTemplate size={16} /> Add preset column
+                </button>
+              </div>
+            )}
+          </div>
+          <button className="btn btn-primary btn-sm" onClick={handleOpenAddTaskFromHeader}>
+            <Plus size={16} /><span className="btn-label"> Add Task</span>
           </button>
           <button className="theme-toggle has-tooltip" onClick={toggleTheme} aria-label="Toggle theme" data-tooltip="Toggle theme">
             {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
@@ -602,11 +656,11 @@ export default function App() {
             <h2>No columns yet</h2>
             <p>Create your first column to start organizing tasks.</p>
             <div className="empty-board-actions">
-              <button className="btn btn-secondary" onClick={() => setPresetsModalOpen(true)}>
-                <LayoutTemplate size={18} /> Add Presets
+              <button className="btn btn-secondary" onClick={handleOpenAddColumn}>
+                <Plus size={18} /> Add new column
               </button>
-              <button className="btn btn-primary" onClick={handleOpenAddColumn}>
-                <Plus size={18} /> Custom Column
+              <button className="btn btn-secondary" onClick={() => setPresetsModalOpen(true)}>
+                <LayoutTemplate size={18} /> Add preset column
               </button>
             </div>
           </div>
