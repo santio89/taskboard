@@ -118,7 +118,10 @@ export function BasicAnalyticsModal({ isOpen, tasks, columns, onClose }: BasicAn
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal modal-analytics" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>{t('analytics.basicTitle')}</h2>
+          <div className="modal-header-title-group">
+            <h2>{t('analytics.title')}</h2>
+            <span className="modal-header-subtitle">{t('analytics.basicLabel')}</span>
+          </div>
           <button className="icon-btn" onClick={onClose}><X size={20} /></button>
         </div>
 
