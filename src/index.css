@@ -906,8 +906,8 @@ body.board-drag-scrolling .app::before {
   cursor: default;
   box-shadow: var(--shadow-sm);
   position: relative;
+  /* transform transition controlled inline in TaskCard (only during drag, not on drop) */
   transition:
-    transform 200ms cubic-bezier(0.22, 0.68, 0, 1),
     opacity 0.25s var(--ease),
     border-color 0.2s ease,
     background-color 0.2s ease,

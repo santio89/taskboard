@@ -116,7 +116,7 @@ export function KanbanColumn({ column, tasks, isTaskOver, isDragActive, animatio
               {tasks.map((task) => (
                 <motion.div
                   key={task.id}
-                  layout={animationsEnabled}
+                  layout={false}
                   initial={animationsEnabled && !isDragActive ? { opacity: 0, height: 0, scale: 0.98 } : false}
                   animate={{ opacity: 1, height: 'auto', scale: 1 }}
                   exit={isDragActive
@@ -126,8 +126,8 @@ export function KanbanColumn({ column, tasks, isTaskOver, isDragActive, animatio
                       : { opacity: 0, height: 0, transition: { duration: 0 } }
                   }
                   transition={!animationsEnabled || isDragActive
-                    ? { duration: 0, layout: { duration: 0 } }
-                    : { duration: 0.2, ease: [0.22, 0.68, 0, 1], layout: { duration: 0.2, ease: [0.22, 0.68, 0, 1] } }
+                    ? { duration: 0 }
+                    : { duration: 0.2, ease: [0.22, 0.68, 0, 1] }
                   }
                   style={{ overflow: isDragActive ? 'visible' : 'hidden' }}
                 >

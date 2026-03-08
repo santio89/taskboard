@@ -21,7 +21,7 @@ const priorityConfig = {
   high: { label: 'High', class: 'priority-high' },
 };
 
-export function TaskCard({ task, highlightColor, isDragActive: _isDragActive = false, onEdit, onDelete }: TaskCardProps) {
+export function TaskCard({ task, highlightColor, isDragActive = false, onEdit, onDelete }: TaskCardProps) {
   const [attachmentCount, setAttachmentCount] = useState(0);
 
   useEffect(() => {
@@ -37,8 +37,15 @@ export function TaskCard({ task, highlightColor, isDragActive: _isDragActive = f
     data: { type: 'task', task },
   });
 
+  /* Only transition transform during drag (isDragActive) so other tasks slide smoothly.
+     On drop (isDragActive=false) no transform transition = instant snap, no flicker. */
+  const transformTransition = isDragActive && !isDragging
+    ? 'transform 120ms cubic-bezier(0.22, 0.68, 0, 1)'
+    : undefined;
+
   const style: React.CSSProperties = {
     transform: CSS.Translate.toString(transform) ?? 'translate3d(0, 0, 0)',
+    transition: transformTransition,
     opacity: isDragging ? 0.4 : 1,
     ...(highlightColor ? {
       borderColor: highlightColor,
