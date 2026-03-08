@@ -303,9 +303,9 @@ export default function App() {
     const task = tasks.find((t) => t.id === id);
     setConfirmState({
       open: true,
-      title: 'Delete Task',
-      message: `This will permanently delete "${task?.title}". This action cannot be undone.`,
-      confirmLabel: 'Delete',
+      title: t('confirm.deleteTask.title'),
+      message: `${t('confirm.deleteTask.prefix')} "${task?.title}". ${t('confirm.deleteTask.message')}`,
+      confirmLabel: t('confirm.delete'),
       onConfirm: () => {
         taskStore.deleteTask(id);
         refreshTasks();
@@ -377,13 +377,13 @@ export default function App() {
     const col = columns.find((c) => c.id === id);
     const taskCount = tasksByColumn[id]?.length ?? 0;
     const message = taskCount > 0
-      ? `This will permanently delete "${col?.title}" and its ${taskCount} task(s). This action cannot be undone.`
-      : `This will permanently delete the "${col?.title}" column. This action cannot be undone.`;
+      ? `${t('confirm.deleteColumn.prefix')} "${col?.title}" ${t('confirm.deleteColumn.messageWithTasks')} ${taskCount} ${t('confirm.deleteColumn.messageTasksSuffix')}`
+      : `${t('confirm.deleteColumn.prefix')} "${col?.title}". ${t('confirm.deleteColumn.messageNoTasks')}`;
     setConfirmState({
       open: true,
-      title: 'Delete Column',
+      title: t('confirm.deleteColumn.title'),
       message,
-      confirmLabel: 'Delete',
+      confirmLabel: t('confirm.delete'),
       onConfirm: () => {
         taskStore.deleteTasksByColumn(id);
         columnStore.deleteColumn(id);

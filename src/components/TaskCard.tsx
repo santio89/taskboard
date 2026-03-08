@@ -85,6 +85,11 @@ export function TaskCard({ task, highlightColor, isDragActive = false, onEdit, o
       </div>
 
       <div className="task-card-footer">
+        {task.dueDate && (
+          <span className={`task-due-badge ${getDueStatus(task.dueDate)}`}>
+            <Calendar size={11} /> {formatDueDate(task.dueDate)}
+          </span>
+        )}
         {task.subtasks && task.subtasks.length > 0 && (
           <span className={`task-subtask-count ${task.subtasks.every((s) => s.done) ? 'all-done' : ''}`}>
             <CheckSquare size={11} /> {task.subtasks.filter((s) => s.done).length}/{task.subtasks.length}
@@ -93,11 +98,6 @@ export function TaskCard({ task, highlightColor, isDragActive = false, onEdit, o
         {attachmentCount > 0 && (
           <span className="task-attachment-count">
             <Paperclip size={11} /> {attachmentCount}
-          </span>
-        )}
-        {task.dueDate && (
-          <span className={`task-due-badge ${getDueStatus(task.dueDate)}`}>
-            <Calendar size={11} /> {formatDueDate(task.dueDate)}
           </span>
         )}
         {task.estimate && (

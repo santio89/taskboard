@@ -1,4 +1,5 @@
 import { AlertTriangle } from 'lucide-react';
+import { t } from '../utils/i18n';
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -9,7 +10,7 @@ interface ConfirmDialogProps {
   onCancel: () => void;
 }
 
-export function ConfirmDialog({ isOpen, title, message, confirmLabel = 'Delete', onConfirm, onCancel }: ConfirmDialogProps) {
+export function ConfirmDialog({ isOpen, title, message, confirmLabel = t('confirm.delete'), onConfirm, onCancel }: ConfirmDialogProps) {
   if (!isOpen) return null;
 
   return (
@@ -21,7 +22,7 @@ export function ConfirmDialog({ isOpen, title, message, confirmLabel = 'Delete',
         <h2 className="confirm-title">{title}</h2>
         <p className="confirm-message">{message}</p>
         <div className="confirm-actions">
-          <button className="btn btn-secondary" onClick={onCancel}>Cancel</button>
+          <button className="btn btn-secondary" onClick={onCancel}>{t('modal.cancel')}</button>
           <button className="btn btn-danger" onClick={onConfirm}>{confirmLabel}</button>
         </div>
       </div>

@@ -134,6 +134,10 @@ html {
 ::placeholder {
   color: var(--text-tertiary);
   opacity: 1;
+  font-size: 0.85rem;
+  font-weight: 400;
+  font-family: inherit;
+  letter-spacing: normal;
 }
 
 input,
@@ -509,9 +513,10 @@ body.board-drag-scrolling .app::before {
 .search-input {
   width: 100%;
   padding: 7px 32px 7px 32px;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
+  font-weight: 400;
   font-family: inherit;
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -1286,7 +1291,7 @@ body.board-drag-scrolling .app::before {
   position: relative;
 }
 
-.form-group label:not(.checkbox-row) {
+.form-group label:not(.checkbox-row):not(.attachment-drop-zone) {
   display: block;
   font-size: 0.72rem;
   font-weight: 600;
@@ -1302,6 +1307,7 @@ body.board-drag-scrolling .app::before {
   width: 100%;
   padding: 9px 12px;
   font-size: 0.85rem;
+  font-weight: 400;
   font-family: inherit;
   border: 2px solid var(--border-color);
   border-radius: 8px;
@@ -1446,6 +1452,7 @@ body.board-drag-scrolling .app::before {
   width: 100%;
   padding: 9px 12px;
   font-size: 0.85rem;
+  font-weight: 400;
   font-family: inherit;
   border: 2px solid var(--border-color);
   border-radius: 8px;
@@ -2195,12 +2202,13 @@ body.board-drag-scrolling .app::before {
 
 .color-picker-rgb-input {
   width: 100%;
-  padding: 6px 4px;
-  font-size: 0.8rem;
+  padding: 9px 8px;
+  font-size: 0.85rem;
+  font-weight: 400;
   font-family: inherit;
   text-align: center;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
   background: var(--bg-primary);
   color: var(--text-primary);
 }
@@ -2473,9 +2481,10 @@ body.board-drag-scrolling .app::before {
   margin: -1px;
 }
 
+/* Placeholder-style text: same as ::placeholder (e.g. "Click or drag files here") */
 label.attachment-drop-zone {
   display: flex;
-  flex-direction: row;
+  justify-content: start;
   align-items: center;
   gap: 8px;
   width: 100%;
@@ -2484,13 +2493,14 @@ label.attachment-drop-zone {
   border-radius: 8px;
   background: var(--bg-primary);
   color: var(--text-tertiary);
-  font-size: 0.82rem;
-  font-weight: 500;
+  opacity: 1;
+  font-size: 0.85rem;
+  font-weight: 400;
   font-family: inherit;
+  letter-spacing: normal;
+  text-transform: none;
   cursor: pointer;
   transition: all 0.2s var(--ease);
-  text-transform: none;
-  letter-spacing: normal;
   margin-bottom: 0;
 }
 
@@ -2741,10 +2751,11 @@ label.attachment-drop-zone.drag-over {
   flex: 1;
   min-width: 0;
   background: var(--bg-secondary);
-  border: 1px solid var(--accent);
-  border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 0.84rem;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  font-weight: 400;
   font-family: inherit;
   color: var(--text-primary);
   outline: none;
@@ -3362,8 +3373,8 @@ label.attachment-drop-zone.drag-over {
   width: 100%;
   padding: 9px 12px;
   font-size: 0.85rem;
+  font-weight: 400;
   font-family: inherit;
-  font-weight: 500;
   border: 2px solid var(--border-color);
   border-radius: 8px;
   background: var(--bg-primary);

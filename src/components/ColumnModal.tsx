@@ -64,7 +64,7 @@ export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProp
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal modal-sm" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>{isEditing ? 'Edit Column' : 'New Column'}</h2>
+          <h2>{isEditing ? t('column.editColumn') : t('column.newColumn')}</h2>
           <button className="icon-btn" onClick={onClose}>
             <X size={20} />
           </button>
@@ -157,8 +157,8 @@ export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProp
           </div>
 
           <div className="modal-actions">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn btn-primary">{isEditing ? 'Update' : 'Add Column'}</button>
+            <button type="button" className="btn btn-secondary" onClick={onClose}>{t('modal.cancel')}</button>
+            <button type="submit" className="btn btn-primary">{isEditing ? t('modal.update') : t('column.addColumn')}</button>
           </div>
         </form>
       </div>

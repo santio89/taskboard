@@ -5,6 +5,7 @@ import { X, Plus, FileText, Image, Film, Music, File, Download, Trash2, Check, C
 import { CustomSelect } from './CustomSelect';
 import { DatePickerPopover } from './DatePickerPopover';
 import { Tooltip } from './Tooltip';
+import { t } from '../utils/i18n';
 import type { AttachmentMeta } from '../store/attachmentStore';
 import * as attachmentStore from '../store/attachmentStore';
 import { v4 as uuidv4 } from 'uuid';
@@ -70,11 +71,11 @@ function SortableSubtaskItem({ subtask, onToggle, onRemove, onEdit }: { subtask:
       )}
       <div className="subtask-actions">
         {!editing && (
-          <button type="button" className="icon-btn subtask-action-btn" onClick={() => setEditing(true)} aria-label="Edit subtask">
+          <button type="button" className="icon-btn subtask-action-btn" onClick={() => setEditing(true)} aria-label={t('task.editSubtask')}>
             <Scan size={12} />
           </button>
         )}
-        <button type="button" className="icon-btn subtask-action-btn danger" onClick={() => onRemove(subtask.id)} aria-label="Remove subtask">
+        <button type="button" className="icon-btn subtask-action-btn danger" onClick={() => onRemove(subtask.id)} aria-label={t('task.removeSubtask')}>
           <X size={12} />
         </button>
       </div>
@@ -146,7 +147,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
-    if (!title.trim()) newErrors.title = 'Title is required';
+    if (!title.trim()) newErrors.title = t('task.titleRequired');
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -295,7 +296,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>{task ? 'Edit Task' : 'New Task'}</h2>
+          <h2>{task ? t('task.editTask') : t('task.newTask')}</h2>
           <button className="icon-btn" onClick={onClose}>
             <X size={20} />
           </button>
@@ -303,7 +304,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
 
         <form onSubmit={handleSubmit} noValidate>
           <div className={`form-group ${errors.title ? 'has-error' : ''}`}>
-            <label htmlFor="task-title">Title</label>
+            <label htmlFor="task-title">{t('task.title')}</label>
             <input
               ref={inputRef}
               id="task-title"
@@ -311,38 +312,38 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
               value={title}
               maxLength={TITLE_MAX_LENGTH}
               onChange={(e) => { setTitle(e.target.value); setErrors((p) => ({ ...p, title: '' })); }}
-              placeholder="What needs to be done?"
+              placeholder={t('task.titlePlaceholder')}
             />
             {errors.title && <span className="field-error">{errors.title}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="task-desc">Description</label>
+            <label htmlFor="task-desc">{t('task.description')}</label>
             <textarea
               id="task-desc"
               value={description}
               maxLength={DESCRIPTION_MAX_LENGTH}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add details..."
+              placeholder={t('task.descriptionPlaceholder')}
             />
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Priority</label>
+              <label>{t('task.priority')}</label>
               <CustomSelect
                 value={priority}
                 options={[
-                  { value: 'low', label: 'Low' },
-                  { value: 'medium', label: 'Medium' },
-                  { value: 'high', label: 'High' },
+                  { value: 'low', label: t('task.priorityLow') },
+                  { value: 'medium', label: t('task.priorityMedium') },
+                  { value: 'high', label: t('task.priorityHigh') },
                 ]}
                 onChange={(v) => setPriority(v as Priority)}
               />
             </div>
 
             <div className="form-group">
-              <label>Column</label>
+              <label>{t('task.column')}</label>
               <CustomSelect
                 value={columnId}
                 options={columns.map((col) => ({ value: col.id, label: col.title }))}
@@ -353,7 +354,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
           </div>
 
           <div className="form-group">
-            <label>Tags</label>
+            <label>{t('task.tags')}</label>
             <div className="tag-input-row">
               <input
                 type="text"
@@ -361,9 +362,9 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
                 maxLength={TAG_MAX_LENGTH}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleTagKeyDown}
-                placeholder="Add tag and press Enter"
+                placeholder={t('task.tagPlaceholder')}
               />
-              <button type="button" className="btn btn-secondary" onClick={handleAddTag}>Add</button>
+              <button type="button" className="btn btn-secondary" onClick={handleAddTag}>{t('task.add')}</button>
             </div>
             {tags.length > 0 && (
               <div className="tags-list">
@@ -377,7 +378,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
           </div>
 
           <div className="form-group">
-            <label>Attachments</label>
+            <label>{t('task.attachments')}</label>
             <label
               className={`attachment-drop-zone ${isDragOver ? 'drag-over' : ''}`}
               onDrop={handleDrop}
@@ -391,7 +392,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
                 className="file-input-hidden"
               />
               <Plus size={20} />
-              <span>{isDragOver ? 'Drop files here' : 'Click or drag files here'}</span>
+              <span>{isDragOver ? t('task.dropFilesHere') : t('task.clickOrDragFiles')}</span>
             </label>
             {(attachments.filter((a) => !attachmentsToDelete.includes(a.id)).length > 0 || pendingFiles.length > 0) && (
               <div className="attachment-list">
@@ -404,10 +405,10 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
                       <Icon size={15} className="attachment-icon" />
                       <span className="attachment-name" title={att.name}>{att.name}</span>
                       <span className="attachment-size">{formatFileSize(att.size)}</span>
-                      <button type="button" className="icon-btn" onClick={() => handleDownloadAttachment(att)} aria-label="Download">
+                      <button type="button" className="icon-btn" onClick={() => handleDownloadAttachment(att)} aria-label={t('task.download')}>
                         <Download size={13} />
                       </button>
-                      <button type="button" className="icon-btn danger" onClick={() => handleDeleteAttachment(att.id)} aria-label="Remove">
+                      <button type="button" className="icon-btn danger" onClick={() => handleDeleteAttachment(att.id)} aria-label={t('task.remove')}>
                         <Trash2 size={13} />
                       </button>
                     </div>
@@ -420,7 +421,7 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
                       <Icon size={15} className="attachment-icon" />
                       <span className="attachment-name" title={file.name}>{file.name}</span>
                       <span className="attachment-size">{formatFileSize(file.size)}</span>
-                      <button type="button" className="icon-btn danger" onClick={() => removePendingFile(i)} aria-label="Remove">
+                      <button type="button" className="icon-btn danger" onClick={() => removePendingFile(i)} aria-label={t('task.remove')}>
                         <X size={13} />
                       </button>
                     </div>
@@ -436,48 +437,48 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
             onClick={() => setShowAdvanced(!showAdvanced)}
           >
             <ChevronDown size={14} className={`advanced-chevron ${showAdvanced ? 'rotated' : ''}`} />
-            Advanced
+            {t('task.advanced')}
           </button>
 
           <div className={`advanced-section ${showAdvanced ? 'open' : ''}`}>
             <div className="advanced-section-inner">
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="task-start">Start Date</label>
+                  <label htmlFor="task-start">{t('task.startDate')}</label>
                   <DatePickerPopover
                     id="task-start"
                     value={startDate}
                     onChange={setStartDate}
-                    placeholder="Start date"
-                    title="Start date"
+                    placeholder={t('task.startDatePlaceholder')}
+                    title={t('task.startDatePlaceholder')}
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="task-due">Due Date</label>
+                  <label htmlFor="task-due">{t('task.dueDate')}</label>
                   <DatePickerPopover
                     id="task-due"
                     value={dueDate}
                     onChange={setDueDate}
-                    placeholder="Due date"
-                    title="Due date"
+                    placeholder={t('task.dueDatePlaceholder')}
+                    title={t('task.dueDatePlaceholder')}
                   />
                 </div>
               </div>
 
               <div className="form-group">
-                <label htmlFor="task-estimate">Time Estimate</label>
+                <label htmlFor="task-estimate">{t('task.timeEstimate')}</label>
                 <input
                   id="task-estimate"
                   type="text"
                   value={estimate}
                   maxLength={TAG_AND_ESTIMATE_MAX_LENGTH}
                   onChange={(e) => setEstimate(e.target.value)}
-                  placeholder="e.g. 2h, 1d, 30m"
+                  placeholder={t('task.timeEstimatePlaceholder')}
                 />
               </div>
 
               <div className="form-group">
-                <label>Subtasks</label>
+                <label>{t('task.subtasks')}</label>
                 <div className="tag-input-row">
                   <input
                     type="text"
@@ -485,9 +486,9 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
                     maxLength={TITLE_MAX_LENGTH}
                     onChange={(e) => setSubtaskInput(e.target.value)}
                     onKeyDown={handleSubtaskKeyDown}
-                    placeholder="Add subtask and press Enter"
+                    placeholder={t('task.subtaskPlaceholder')}
                   />
-                  <button type="button" className="btn btn-secondary" onClick={handleAddSubtask}>Add</button>
+                  <button type="button" className="btn btn-secondary" onClick={handleAddSubtask}>{t('task.add')}</button>
                 </div>
                 {subtasks.length > 0 && (
                   <DndContext
@@ -510,8 +511,8 @@ export function TaskModal({ isOpen, task, defaultColumnId, columns, onSave, onCl
           </div>
 
           <div className="modal-actions">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn btn-primary">{task ? 'Update' : 'Create'}</button>
+            <button type="button" className="btn btn-secondary" onClick={onClose}>{t('task.cancel')}</button>
+            <button type="submit" className="btn btn-primary">{task ? t('task.update') : t('task.create')}</button>
           </div>
         </form>
       </div>

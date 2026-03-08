@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { PRESET_COLUMNS } from '../types';
 import { X } from 'lucide-react';
+import { t } from '../utils/i18n';
 
 interface PresetsModalProps {
   isOpen: boolean;
@@ -33,13 +34,13 @@ export function PresetsModal({ isOpen, onAdd, onClose }: PresetsModalProps) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal modal-presets" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Add Preset Columns</h2>
+          <h2>{t('presets.title')}</h2>
           <button className="icon-btn" onClick={onClose}>
             <X size={20} />
           </button>
         </div>
 
-        <p className="presets-hint">Select one or more columns to add to your board.</p>
+        <p className="presets-hint">{t('presets.hint')}</p>
 
         <div className="presets-grid">
           {PRESET_COLUMNS.map((preset) => {
@@ -59,14 +60,16 @@ export function PresetsModal({ isOpen, onAdd, onClose }: PresetsModalProps) {
         </div>
 
         <div className="modal-actions">
-          <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
+          <button type="button" className="btn btn-secondary" onClick={onClose}>{t('modal.cancel')}</button>
           <button
             type="button"
             className="btn btn-primary"
             disabled={selected.size === 0}
             onClick={handleSubmit}
           >
-            Add {selected.size > 0 ? `${selected.size} Column${selected.size > 1 ? 's' : ''}` : 'Columns'}
+            {selected.size > 0
+              ? `${t('presets.add')} ${selected.size} ${selected.size === 1 ? t('presets.columnSingular') : t('presets.columnPlural')}`
+              : t('presets.addColumns')}
           </button>
         </div>
       </div>
