@@ -137,7 +137,6 @@ export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProp
               />
               <span>{t('column.markDone')}</span>
             </label>
-            <span className="field-hint">{t('column.markDoneHint')}</span>
           </div>
 
           <div className="modal-actions">
