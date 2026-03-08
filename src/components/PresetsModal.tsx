@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 
 interface PresetsModalProps {
   isOpen: boolean;
-  onAdd: (presets: { title: string; color: string }[]) => void;
+  onAdd: (presets: { title: string; color: string; isDone?: boolean }[]) => void;
   onClose: () => void;
 }
 
@@ -25,7 +25,7 @@ export function PresetsModal({ isOpen, onAdd, onClose }: PresetsModalProps) {
   const handleSubmit = () => {
     const toAdd = PRESET_COLUMNS
       .filter((p) => selected.has(p.id))
-      .map(({ title, color }) => ({ title, color }));
+      .map(({ title, color, isDone }) => ({ title, color, isDone }));
     if (toAdd.length > 0) onAdd(toAdd);
   };
 

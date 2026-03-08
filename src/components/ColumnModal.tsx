@@ -3,6 +3,7 @@ import type { Column } from '../types';
 import { COLOR_PICKER_PRESETS, TITLE_MAX_LENGTH } from '../types';
 import { X, Pipette } from 'lucide-react';
 import { ColorPickerPopover } from './ColorPickerPopover';
+import { t } from '../utils/i18n';
 
 function normalizeHex(hex: string): string {
   const m = hex.replace(/^#/, '').match(/^([0-9a-f]{3})$/i);
@@ -25,13 +26,14 @@ function hexToRgba(hex: string, alpha: number): string {
 interface ColumnModalProps {
   isOpen: boolean;
   column: Column | null;
-  onSave: (title: string, color: string) => void;
+  onSave: (title: string, color: string, isDone: boolean) => void;
   onClose: () => void;
 }
 
 export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProps) {
   const [title, setTitle] = useState(() => column?.title ?? '');
   const [color, setColor] = useState(() => column?.color ?? COLOR_PICKER_PRESETS[0]);
+  const [isDone, setIsDone] = useState(() => column?.isDone ?? false);
   const [error, setError] = useState('');
   const [customPickerOpen, setCustomPickerOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -52,7 +54,7 @@ export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProp
       return;
     }
     setError('');
-    onSave(title.trim(), color);
+    onSave(title.trim(), color, isDone);
   };
 
   const isEditing = column !== null;
@@ -124,6 +126,18 @@ export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProp
                 </>
               )}
             />
+          </div>
+
+          <div className="form-group">
+            <label className="checkbox-row">
+              <input
+                type="checkbox"
+                checked={isDone}
+                onChange={(e) => setIsDone(e.target.checked)}
+              />
+              <span>{t('column.markDone')}</span>
+            </label>
+            <span className="field-hint">{t('column.markDoneHint')}</span>
           </div>
 
           <div className="modal-actions">

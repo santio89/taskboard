@@ -392,7 +392,8 @@ body.board-drag-scrolling .app::before {
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  min-width: 200px;
+  width: max-content;
+  min-width: 140px;
   padding: 6px;
   background: var(--column-bg);
   border: 1px solid var(--border-color);
@@ -423,6 +424,7 @@ body.board-drag-scrolling .app::before {
   font-size: 0.875rem;
   cursor: pointer;
   text-align: left;
+  white-space: nowrap;
   transition: background 0.15s ease;
 }
 
@@ -1246,7 +1248,7 @@ body.board-drag-scrolling .app::before {
   position: relative;
 }
 
-.form-group label {
+.form-group label:not(.checkbox-row) {
   display: block;
   font-size: 0.72rem;
   font-weight: 600;
@@ -1305,6 +1307,35 @@ body.board-drag-scrolling .app::before {
   font-weight: 500;
   color: var(--danger);
   margin-top: 5px;
+}
+
+.field-hint {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0;
+  line-height: 1.2;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+  vertical-align: middle;
 }
 
 .form-group textarea:not(.subtask-edit-input) {
@@ -2742,7 +2773,7 @@ label.attachment-drop-zone.drag-over {
 
 .analytics-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 10px;
 }
 
@@ -2806,6 +2837,8 @@ label.attachment-drop-zone.drag-over {
 }
 
 .analytics-card {
+  display: flex;
+  flex-direction: column;
   padding: 16px;
   border-radius: 10px;
   background: var(--bg-primary);
@@ -2825,6 +2858,72 @@ label.attachment-drop-zone.drag-over {
   letter-spacing: 0.05em;
   color: var(--text-secondary);
   margin-bottom: 14px;
+}
+
+.analytics-card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.analytics-card-header-row .analytics-card-title {
+  margin-bottom: 0;
+}
+
+.analytics-view-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.analytics-toggle-btn {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.analytics-toggle-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.analytics-toggle-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.tag-details-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tag-detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tag-detail-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.tag-detail-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .analytics-empty {
@@ -2940,6 +3039,150 @@ label.attachment-drop-zone.drag-over {
 .legend-count {
   font-weight: 700;
   color: var(--text-primary);
+}
+
+/* Stacked bar chart */
+.stacked-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stacked-bar {
+  display: flex;
+  height: 18px;
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--bg-hover);
+}
+
+.stacked-bar-segment {
+  height: 100%;
+  min-width: 3px;
+  transition: width 0.4s var(--ease-out);
+}
+
+.stacked-bar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+}
+
+.stacked-bar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+}
+
+.stacked-bar-legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.stacked-bar-legend-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.stacked-bar-legend-count {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Gauge chart */
+.gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.gauge-svg {
+  width: 160px;
+  height: 90px;
+}
+
+.gauge-bg {
+  fill: none;
+  stroke: var(--bg-hover);
+  stroke-width: 14;
+  stroke-linecap: round;
+}
+
+.gauge-fill {
+  fill: none;
+  stroke-width: 14;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s var(--ease-out);
+}
+
+.gauge-value-text {
+  font-size: 26px;
+  font-weight: 700;
+  fill: var(--text-primary);
+  text-anchor: middle;
+}
+
+.gauge-label-text {
+  font-size: 10px;
+  font-weight: 500;
+  fill: var(--text-tertiary);
+  text-anchor: middle;
+}
+
+/* Composition chart (task details) */
+.composition-chart {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.composition-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.composition-label {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  width: 80px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.composition-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-hover);
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.composition-fill {
+  height: 100%;
+  border-radius: 4px;
+  min-width: 3px;
+  background: var(--accent);
+  transition: width 0.4s var(--ease-out);
+}
+
+.composition-value {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 /* Timeline chart */

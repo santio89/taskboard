@@ -203,7 +203,7 @@ describe('ColumnModal', () => {
     );
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'My Column' } });
     fireEvent.click(screen.getByText('Add Column'));
-    expect(onSave).toHaveBeenCalledWith('My Column', expect.any(String));
+    expect(onSave).toHaveBeenCalledWith('My Column', expect.any(String), false);
   });
 
   it('shows Color label and preset grid with custom color button when open', () => {
@@ -233,7 +233,7 @@ describe('ColumnModal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Select color #ef4444' }));
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Red Column' } });
     fireEvent.click(screen.getByText('Add Column'));
-    expect(onSave).toHaveBeenCalledWith('Red Column', '#ef4444');
+    expect(onSave).toHaveBeenCalledWith('Red Column', '#ef4444', false);
   });
 
   it('opens custom color picker popover when Custom color button is clicked', async () => {

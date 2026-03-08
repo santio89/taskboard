@@ -60,12 +60,13 @@ export function getColumns(): Column[] {
   return loadColumns();
 }
 
-export function addColumn(title: string, color: string): Column {
+export function addColumn(title: string, color: string, isDone?: boolean): Column {
   const columns = loadColumns();
   const newColumn: Column = {
     id: uuidv4(),
     title: title.slice(0, TITLE_MAX_LENGTH),
     color,
+    ...(isDone ? { isDone: true } : {}),
   };
   columns.push(newColumn);
   saveColumns(columns);

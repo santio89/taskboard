@@ -29,7 +29,7 @@ import { BasicAnalyticsModal } from './components/BasicAnalyticsModal';
 import { AdvancedAnalyticsModal } from './components/AdvancedAnalyticsModal';
 import { ToastContainer } from './components/Toast';
 import { showToast } from './utils/toast';
-import { Plus, Columns3, LayoutTemplate, Download, Upload, BarChart3, ChevronDown, Settings, ArrowLeftRight } from 'lucide-react';
+import { Plus, Columns3, LayoutTemplate, Download, Upload, BarChart2, BarChart3, ChevronDown, Settings, ArrowLeftRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { SettingsPopup } from './components/SettingsPopup';
 import { useSettings } from './hooks/useSettings';
@@ -362,11 +362,11 @@ export default function App() {
     setColumnModalOpen(true);
   };
 
-  const handleSaveColumn = (title: string, color: string) => {
+  const handleSaveColumn = (title: string, color: string, isDone: boolean) => {
     if (editingColumn) {
-      columnStore.updateColumn(editingColumn.id, { title, color });
+      columnStore.updateColumn(editingColumn.id, { title, color, isDone });
     } else {
-      columnStore.addColumn(title, color);
+      columnStore.addColumn(title, color, isDone);
     }
     refreshColumns();
     setColumnModalOpen(false);
@@ -396,8 +396,8 @@ export default function App() {
 
   const closeConfirm = () => setConfirmState((s) => ({ ...s, open: false }));
 
-  const handleAddPresets = (presets: { title: string; color: string }[]) => {
-    presets.forEach(({ title, color }) => columnStore.addColumn(title, color));
+  const handleAddPresets = (presets: { title: string; color: string; isDone?: boolean }[]) => {
+    presets.forEach(({ title, color, isDone }) => columnStore.addColumn(title, color, isDone));
     refreshColumns();
     setPresetsModalOpen(false);
   };
@@ -586,12 +586,9 @@ export default function App() {
     checkConfetti(activeId, sourceColId);
   };
 
-  const DONE_KEYWORDS = ['done', 'complete', 'completed', 'deployed', 'finished', 'resolved', 'closed'];
-
   const isDoneColumn = (colId: string): boolean => {
     const col = columns.find((c) => c.id === colId);
-    if (!col) return false;
-    return DONE_KEYWORDS.some((kw) => col.title.toLowerCase().includes(kw));
+    return col?.isDone === true;
   };
 
   const checkConfetti = (taskId: string, sourceColId: string | null) => {
@@ -718,7 +715,7 @@ export default function App() {
             {analyticsMenuOpen && (
               <div className="columns-dropdown">
                 <button type="button" className="columns-dropdown-item" onClick={() => { setBasicAnalyticsOpen(true); setAnalyticsMenuOpen(false); }}>
-                  <BarChart3 size={16} /> {t('analytics.basic')}
+                  <BarChart2 size={16} /> {t('analytics.basic')}
                 </button>
                 <button type="button" className="columns-dropdown-item" onClick={() => { setAdvancedAnalyticsOpen(true); setAnalyticsMenuOpen(false); }}>
                   <BarChart3 size={16} /> {t('analytics.advanced')}

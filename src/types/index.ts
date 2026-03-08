@@ -37,6 +37,7 @@ export interface Column {
   id: string;
   title: string;
   color: string;
+  isDone?: boolean;
 }
 
 export const DEFAULT_COLUMNS: Column[] = [
@@ -44,7 +45,7 @@ export const DEFAULT_COLUMNS: Column[] = [
   { id: 'todo', title: 'To Do', color: '#7c3aed' },
   { id: 'in-progress', title: 'In Progress', color: '#f59e0b' },
   { id: 'review', title: 'Review', color: '#8b5cf6' },
-  { id: 'done', title: 'Done', color: '#10b981' },
+  { id: 'done', title: 'Done', color: '#10b981', isDone: true },
 ];
 
 export const PRESET_COLUMNS: Column[] = [
@@ -52,10 +53,10 @@ export const PRESET_COLUMNS: Column[] = [
   { id: 'preset-todo', title: 'To Do', color: '#7c3aed' },
   { id: 'preset-in-progress', title: 'In Progress', color: '#f59e0b' },
   { id: 'preset-review', title: 'Review', color: '#8b5cf6' },
-  { id: 'preset-done', title: 'Done', color: '#10b981' },
+  { id: 'preset-done', title: 'Done', color: '#10b981', isDone: true },
   { id: 'preset-blocked', title: 'Blocked', color: '#ef4444' },
   { id: 'preset-qa', title: 'QA', color: '#06b6d4' },
-  { id: 'preset-deployed', title: 'Deployed', color: '#14b8a6' },
+  { id: 'preset-deployed', title: 'Deployed', color: '#14b8a6', isDone: true },
   { id: 'preset-design', title: 'Design', color: '#ec4899' },
   { id: 'preset-ideas', title: 'Ideas', color: '#f97316' },
   { id: 'preset-bugs', title: 'Bugs', color: '#ef4444' },
