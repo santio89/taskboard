@@ -19,17 +19,17 @@ export function SettingsPopup({ settings, theme, onUpdate, onThemeChange }: Sett
         <div className="settings-lang-group">
           <button
             type="button"
-            className={`settings-lang-btn ${theme === 'light' ? 'active' : ''}`}
-            onClick={() => onThemeChange('light')}
-          >
-            {t('settings.themeLight')}
-          </button>
-          <button
-            type="button"
             className={`settings-lang-btn ${theme === 'dark' ? 'active' : ''}`}
             onClick={() => onThemeChange('dark')}
           >
             {t('settings.themeDark')}
+          </button>
+          <button
+            type="button"
+            className={`settings-lang-btn ${theme === 'light' ? 'active' : ''}`}
+            onClick={() => onThemeChange('light')}
+          >
+            {t('settings.themeLight')}
           </button>
         </div>
       </div>
@@ -42,14 +42,14 @@ export function SettingsPopup({ settings, theme, onUpdate, onThemeChange }: Sett
             className={`settings-lang-btn ${settings.language === 'en' ? 'active' : ''}`}
             onClick={() => onUpdate({ language: 'en' as Language })}
           >
-            English
+            Eng
           </button>
           <button
             type="button"
             className={`settings-lang-btn ${settings.language === 'es' ? 'active' : ''}`}
             onClick={() => onUpdate({ language: 'es' as Language })}
           >
-            Español
+            Esp
           </button>
         </div>
       </div>
