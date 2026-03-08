@@ -140,6 +140,7 @@ export default function App() {
     if (e.button !== 0) return;
     const target = e.target as HTMLElement;
     if (target.closest('.kanban-column')) return;
+    window.getSelection()?.removeAllRanges();
     const el = e.currentTarget;
     dragScrollRef.current = {
       startX: e.clientX,
