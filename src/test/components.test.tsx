@@ -322,27 +322,27 @@ describe('SettingsPopup', () => {
     expect(onUpdate).toHaveBeenCalledWith({ language: 'es' });
   });
 
-  it('shows Enabled as active when animations are on', () => {
+  it('shows Yes as active when animations are on', () => {
     render(<SettingsPopup {...defaultProps} />);
-    const enabledBtn = screen.getByText('Enabled');
+    const enabledBtn = screen.getByText('Yes');
     expect(enabledBtn.className).toContain('active');
   });
 
-  it('calls onUpdate when Disabled is clicked', () => {
+  it('calls onUpdate when No is clicked', () => {
     const onUpdate = vi.fn();
     render(<SettingsPopup {...defaultProps} onUpdate={onUpdate} />);
-    fireEvent.click(screen.getByText('Disabled'));
+    fireEvent.click(screen.getByText('No'));
     expect(onUpdate).toHaveBeenCalledWith({ animationsEnabled: false });
   });
 
-  it('shows Disabled as active when animations are off', () => {
+  it('shows No as active when animations are off', () => {
     render(
       <SettingsPopup
         {...defaultProps}
         settings={{ language: 'en', animationsEnabled: false }}
       />
     );
-    const disabledBtn = screen.getByText('Disabled');
+    const disabledBtn = screen.getByText('No');
     expect(disabledBtn.className).toContain('active');
   });
 });

@@ -23,8 +23,8 @@ describe('i18n', () => {
     expect(t('settings.theme')).toBe('Theme');
     expect(t('settings.language')).toBe('Language');
     expect(t('settings.animations')).toBe('Animations');
-    expect(t('settings.animationsEnabled')).toBe('Enabled');
-    expect(t('settings.animationsDisabled')).toBe('Disabled');
+    expect(t('settings.animationsEnabled')).toBe('Yes');
+    expect(t('settings.animationsDisabled')).toBe('No');
   });
 
   it('translates settings keys to Spanish', () => {
@@ -32,8 +32,8 @@ describe('i18n', () => {
     expect(t('settings.theme')).toBe('Tema');
     expect(t('settings.language')).toBe('Idioma');
     expect(t('settings.animations')).toBe('Animaciones');
-    expect(t('settings.animationsEnabled')).toBe('Activado');
-    expect(t('settings.animationsDisabled')).toBe('Desactivado');
+    expect(t('settings.animationsEnabled')).toBe('Sí');
+    expect(t('settings.animationsDisabled')).toBe('No');
   });
 
   it('translates analytics keys', () => {
