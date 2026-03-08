@@ -200,7 +200,7 @@ export default function App() {
   );
 
   const dropAnimation: DropAnimation = {
-    duration: 250,
+    duration: settings.animationsEnabled ? 250 : 0,
     easing: 'cubic-bezier(0.22, 0.68, 0, 1)',
   };
 
@@ -229,8 +229,46 @@ export default function App() {
         }
         return [{ id: closest.id, data: { droppableContainer: closest } }];
       }
+      const pointer = args.pointerCoordinates;
+      if (!pointer) return rectIntersection(args);
+
       const pointerCollisions = pointerWithin(args);
-      if (pointerCollisions.length > 0) return pointerCollisions;
+
+      const taskHits = pointerCollisions.filter((c) => {
+        const id = c.id as string;
+        return !id.startsWith('column-drop-') && !id.startsWith('column-');
+      });
+      if (taskHits.length > 0) return taskHits;
+
+      const columnHit = pointerCollisions.find((c) =>
+        (c.id as string).startsWith('column-drop-')
+      );
+      if (columnHit) {
+        const colId = (columnHit.id as string).replace('column-drop-', '');
+        const tasksInCol = args.droppableContainers.filter((c) => {
+          const id = c.id as string;
+          if (id.startsWith('column-drop-') || id.startsWith('column-')) return false;
+          const data = c.data?.current as { type?: string; task?: Task } | undefined;
+          return data?.type === 'task' && data?.task?.columnId === colId;
+        });
+        if (tasksInCol.length > 0) {
+          let closestTask = tasksInCol[0];
+          let minDist = Infinity;
+          for (const tc of tasksInCol) {
+            const rect = tc.rect.current;
+            if (!rect) continue;
+            const centerY = rect.top + rect.height / 2;
+            const d = Math.abs(pointer.y - centerY);
+            if (d < minDist) {
+              minDist = d;
+              closestTask = tc;
+            }
+          }
+          return [{ id: closestTask.id, data: { droppableContainer: closestTask } }];
+        }
+        return [columnHit];
+      }
+
       return rectIntersection(args);
     },
     [activeColumn, isColumnLayoutVertical],

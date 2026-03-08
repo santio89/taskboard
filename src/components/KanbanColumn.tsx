@@ -41,14 +41,19 @@ export function KanbanColumn({ column, tasks, isTaskOver, isDragActive, animatio
     listeners,
     setNodeRef: setSortableRef,
     transform,
+    transition,
     isDragging,
   } = useSortable({
     id: `column-${column.id}`,
     data: { type: 'column', column },
   });
 
+  const columnTransition = animationsEnabled
+    ? (transition?.trim() || 'transform 200ms cubic-bezier(0.22, 0.68, 0, 1)')
+    : undefined;
   const style = {
-    transform: CSS.Translate.toString(transform) ?? 'translate3d(0, 0, 0)',
+    transform: CSS.Transform.toString(transform) ?? 'translate3d(0, 0, 0)',
+    transition: isDragging ? undefined : columnTransition,
     opacity: isDragging ? 0.4 : 1,
     ...(isDragging ? {
       borderColor: column.color,
@@ -111,19 +116,22 @@ export function KanbanColumn({ column, tasks, isTaskOver, isDragActive, animatio
               {tasks.map((task) => (
                 <motion.div
                   key={task.id}
-                  layout={false}
-                  initial={animationsEnabled ? { opacity: 0, height: 0, scale: 0.98 } : false}
+                  layout={animationsEnabled}
+                  initial={animationsEnabled && !isDragActive ? { opacity: 0, height: 0, scale: 0.98 } : false}
                   animate={{ opacity: 1, height: 'auto', scale: 1 }}
-                  exit={animationsEnabled ? {
-                    opacity: 0,
-                    height: 0,
-                    scale: 0.98,
-                    transition: { duration: 0.14, ease: [0.4, 0, 1, 1] },
-                  } : { opacity: 0, height: 0, transition: { duration: 0 } }}
-                  transition={animationsEnabled ? { duration: 0.14, ease: [0, 0, 0.6, 1] } : { duration: 0 }}
+                  exit={isDragActive
+                    ? { opacity: 0, height: 0, transition: { duration: 0 } }
+                    : animationsEnabled
+                      ? { opacity: 0, height: 0, scale: 0.98, transition: { duration: 0.14, ease: [0.4, 0, 1, 1] } }
+                      : { opacity: 0, height: 0, transition: { duration: 0 } }
+                  }
+                  transition={!animationsEnabled || isDragActive
+                    ? { duration: 0, layout: { duration: 0 } }
+                    : { duration: 0.2, ease: [0.22, 0.68, 0, 1], layout: { duration: 0.2, ease: [0.22, 0.68, 0, 1] } }
+                  }
                   style={{ overflow: isDragActive ? 'visible' : 'hidden' }}
                 >
-                  <TaskCard task={task} highlightColor={isTaskOver ? column.color : null} onEdit={onEditTask} onDelete={onDeleteTask} />
+                  <TaskCard task={task} highlightColor={isTaskOver ? column.color : null} isDragActive={isDragActive} onEdit={onEditTask} onDelete={onDeleteTask} />
                 </motion.div>
               ))}
             </AnimatePresence>
