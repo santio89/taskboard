@@ -38,6 +38,7 @@ export interface Column {
   title: string;
   color: string;
   isDone?: boolean;
+  hideCount?: boolean;
 }
 
 export const DEFAULT_COLUMNS: Column[] = [

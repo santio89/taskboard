@@ -362,11 +362,11 @@ export default function App() {
     setColumnModalOpen(true);
   };
 
-  const handleSaveColumn = (title: string, color: string, isDone: boolean) => {
+  const handleSaveColumn = (title: string, color: string, isDone: boolean, hideCount?: boolean) => {
     if (editingColumn) {
-      columnStore.updateColumn(editingColumn.id, { title, color, isDone });
+      columnStore.updateColumn(editingColumn.id, { title, color, isDone, hideCount });
     } else {
-      columnStore.addColumn(title, color, isDone);
+      columnStore.addColumn(title, color, isDone, hideCount);
     }
     refreshColumns();
     setColumnModalOpen(false);

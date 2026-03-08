@@ -1264,6 +1264,23 @@ body.board-drag-scrolling .app::before {
 /* ============================================
    Form
    ============================================ */
+.column-modal-section {
+  margin-bottom: 16px;
+}
+
+.column-modal-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.column-modal-section-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+
 .form-group {
   margin-bottom: 14px;
   position: relative;

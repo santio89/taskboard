@@ -26,7 +26,7 @@ function hexToRgba(hex: string, alpha: number): string {
 interface ColumnModalProps {
   isOpen: boolean;
   column: Column | null;
-  onSave: (title: string, color: string, isDone: boolean) => void;
+  onSave: (title: string, color: string, isDone: boolean, hideCount?: boolean) => void;
   onClose: () => void;
 }
 
@@ -34,6 +34,7 @@ export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProp
   const [title, setTitle] = useState(() => column?.title ?? '');
   const [color, setColor] = useState(() => column?.color ?? COLOR_PICKER_PRESETS[0]);
   const [isDone, setIsDone] = useState(() => column?.isDone ?? false);
+  const [hideCount, setHideCount] = useState(() => column?.hideCount ?? false);
   const [error, setError] = useState('');
   const [customPickerOpen, setCustomPickerOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -54,7 +55,7 @@ export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProp
       return;
     }
     setError('');
-    onSave(title.trim(), color, isDone);
+    onSave(title.trim(), color, isDone, hideCount);
   };
 
   const isEditing = column !== null;
@@ -70,73 +71,89 @@ export function ColumnModal({ isOpen, column, onSave, onClose }: ColumnModalProp
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className={`form-group ${error ? 'has-error' : ''}`}>
-            <label htmlFor="col-title">Name</label>
-            <input
-              ref={inputRef}
-              id="col-title"
-              type="text"
-              value={title}
-              maxLength={TITLE_MAX_LENGTH}
-              onChange={(e) => { setTitle(e.target.value); setError(''); }}
-              placeholder="e.g. Blocked, QA, Deployed..."
-            />
-            {error && <span className="field-error">{error}</span>}
-          </div>
-
-          <div className="form-group">
-            <ColorPickerPopover
-              id="col-color"
-              value={color}
-              onChange={setColor}
-              open={customPickerOpen}
-              onClose={() => setCustomPickerOpen(false)}
-              onOpenRequest={() => setCustomPickerOpen(true)}
-              anchorRef={customSwatchRef}
-              renderTrigger={({ onOpen }) => (
-                <>
-                  <label htmlFor="col-color">Color</label>
-                  <div className="color-picker-modal-grid">
-                    <button
-                      ref={customSwatchRef}
-                      type="button"
-                      className="color-picker-modal-custom"
-                      style={{
-                        backgroundColor: normalizeHex(color),
-                        ['--custom-picker-shadow' as string]: `0 2px 10px ${hexToRgba(color, 0.55)}`,
-                        ['--custom-picker-shadow-hover' as string]: `0 2px 14px ${hexToRgba(color, 0.7)}`,
-                      }}
-                      onClick={onOpen}
-                      aria-label="Custom color"
-                      title="Custom color"
-                    >
-                      <Pipette size={16} className="color-picker-modal-custom-icon" />
-                    </button>
-                    {COLOR_PICKER_PRESETS.map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        className={`color-picker-modal-swatch ${normalizeHex(c) === normalizeHex(color) ? 'selected' : ''}`}
-                        style={{ backgroundColor: c }}
-                        onClick={() => setColor(normalizeHex(c))}
-                        aria-label={`Select color ${c}`}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-            />
-          </div>
-
-          <div className="form-group">
-            <label className="checkbox-row">
+          <div className="column-modal-section">
+            <div className="column-modal-section-title">{t('column.sectionName').toUpperCase()}</div>
+            <div className={`form-group ${error ? 'has-error' : ''}`}>
               <input
-                type="checkbox"
-                checked={isDone}
-                onChange={(e) => setIsDone(e.target.checked)}
+                ref={inputRef}
+                id="col-title"
+                type="text"
+                value={title}
+                maxLength={TITLE_MAX_LENGTH}
+                onChange={(e) => { setTitle(e.target.value); setError(''); }}
+                placeholder="e.g. Blocked, QA, Deployed..."
+                aria-label={t('column.sectionName')}
               />
-              <span>{t('column.markDone')}</span>
-            </label>
+              {error && <span className="field-error">{error}</span>}
+            </div>
+          </div>
+
+          <div className="column-modal-section">
+            <div className="column-modal-section-title">{t('column.sectionColor').toUpperCase()}</div>
+            <div className="form-group">
+              <ColorPickerPopover
+                id="col-color"
+                value={color}
+                onChange={setColor}
+                open={customPickerOpen}
+                onClose={() => setCustomPickerOpen(false)}
+                onOpenRequest={() => setCustomPickerOpen(true)}
+                anchorRef={customSwatchRef}
+                renderTrigger={({ onOpen }) => (
+                  <div className="color-picker-modal-grid">
+                      <button
+                        ref={customSwatchRef}
+                        type="button"
+                        className="color-picker-modal-custom"
+                        style={{
+                          backgroundColor: normalizeHex(color),
+                          ['--custom-picker-shadow' as string]: `0 2px 10px ${hexToRgba(color, 0.55)}`,
+                          ['--custom-picker-shadow-hover' as string]: `0 2px 14px ${hexToRgba(color, 0.7)}`,
+                        }}
+                        onClick={onOpen}
+                        aria-label="Custom color"
+                        title="Custom color"
+                      >
+                        <Pipette size={16} className="color-picker-modal-custom-icon" />
+                      </button>
+                      {COLOR_PICKER_PRESETS.map((c) => (
+                        <button
+                          key={c}
+                          type="button"
+                          className={`color-picker-modal-swatch ${normalizeHex(c) === normalizeHex(color) ? 'selected' : ''}`}
+                          style={{ backgroundColor: c }}
+                          onClick={() => setColor(normalizeHex(c))}
+                          aria-label={`Select color ${c}`}
+                        />
+                      ))}
+                    </div>
+                )}
+              />
+            </div>
+          </div>
+
+          <div className="column-modal-section">
+            <div className="column-modal-section-title">{t('column.sectionMisc').toUpperCase()}</div>
+            <div className="form-group">
+              <label className="checkbox-row">
+                <input
+                  type="checkbox"
+                  checked={isDone}
+                  onChange={(e) => setIsDone(e.target.checked)}
+                />
+                <span>{t('column.markDone')}</span>
+              </label>
+            </div>
+            <div className="form-group">
+              <label className="checkbox-row">
+                <input
+                  type="checkbox"
+                  checked={hideCount}
+                  onChange={(e) => setHideCount(e.target.checked)}
+                />
+                <span>{t('column.hideTaskCount')}</span>
+              </label>
+            </div>
           </div>
 
           <div className="modal-actions">

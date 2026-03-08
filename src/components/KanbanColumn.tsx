@@ -81,7 +81,7 @@ export function KanbanColumn({ column, tasks, isTaskOver, isDragActive, animatio
           <Tooltip text={column.title} position="below">
             <h3 className="column-title">{column.title}</h3>
           </Tooltip>
-          <span className="column-count">{tasks.length}</span>
+          {!column.hideCount && <span className="column-count">{tasks.length}</span>}
           <button className={`column-collapse-btn ${collapsed ? 'collapsed' : ''}`} onClick={handleToggleCollapsed} aria-label={collapsed ? 'Expand' : 'Collapse'}>
             <ChevronDown size={14} />
           </button>
