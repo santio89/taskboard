@@ -129,7 +129,7 @@ export function KanbanColumn({ column, tasks, isTaskOver, isDragActive, animatio
                     ? { duration: 0 }
                     : { duration: 0.2, ease: [0.22, 0.68, 0, 1] }
                   }
-                  style={{ overflow: isDragActive ? 'visible' : 'hidden' }}
+                  style={{ overflow: 'visible' }}
                 >
                   <TaskCard task={task} highlightColor={isTaskOver ? column.color : null} isDragActive={isDragActive} onEdit={onEditTask} onDelete={onDeleteTask} />
                 </motion.div>

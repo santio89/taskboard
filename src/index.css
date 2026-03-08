@@ -931,16 +931,24 @@ body.board-drag-scrolling .app::before {
   border-color: var(--border-hover);
   background: var(--bg-hover);
   translate: 0 -2px;
+  z-index: 1;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--border-hover) 55% transparent), var(--shadow-sm);
 }
 
 .task-card:hover::after {
   opacity: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] .task-card:hover::after {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
 }
 
 .board-dragging .task-card:hover {
   border-color: var(--border-color);
   background: var(--card-bg);
   translate: none;
+  box-shadow: var(--shadow-sm);
 }
 
 .board-dragging .task-card:hover::after {
