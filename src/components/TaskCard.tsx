@@ -10,6 +10,7 @@ import { Tooltip } from './Tooltip';
 interface TaskCardProps {
   task: Task;
   highlightColor?: string | null;
+  isDragActive?: boolean;
   onEdit: (task: Task) => void;
   onDelete: (id: string) => void;
 }
@@ -20,7 +21,7 @@ const priorityConfig = {
   high: { label: 'High', class: 'priority-high' },
 };
 
-export function TaskCard({ task, highlightColor, onEdit, onDelete }: TaskCardProps) {
+export function TaskCard({ task, highlightColor, isDragActive: _isDragActive = false, onEdit, onDelete }: TaskCardProps) {
   const [attachmentCount, setAttachmentCount] = useState(0);
 
   useEffect(() => {
