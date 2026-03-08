@@ -2316,10 +2316,14 @@ body.board-drag-scrolling .app::before {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
+  width: 120px;
+  flex-shrink: 0;
 }
 
 .settings-lang-btn {
-  padding: 5px 12px;
+  flex: 1;
+  min-width: 0;
+  padding: 5px 8px;
   font-size: 0.75rem;
   font-weight: 600;
   font-family: inherit;
