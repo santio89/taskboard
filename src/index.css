@@ -1491,6 +1491,11 @@ body.board-drag-scrolling .app::before {
 
 .date-picker-value.placeholder {
   color: var(--text-tertiary);
+  opacity: 1;
+  font-size: 0.85rem;
+  font-weight: 400;
+  font-family: inherit;
+  letter-spacing: normal;
 }
 
 .date-picker-popover {
