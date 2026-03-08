@@ -1075,7 +1075,7 @@ body.board-drag-scrolling .app::before {
 .task-card-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
   margin-top: 8px;
 }
 
@@ -1083,8 +1083,20 @@ body.board-drag-scrolling .app::before {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
+  gap: 8px;
+  margin-top: 8px;
+  transition: gap 0.2s var(--ease), margin 0.2s var(--ease);
+}
+
+.task-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--text-tertiary);
+  margin-left: auto;
 }
 
 .priority-badge {
@@ -1143,15 +1155,6 @@ body.board-drag-scrolling .app::before {
 
 .tag.removable:hover {
   opacity: 0.8;
-}
-
-.task-time {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 0.68rem;
-  color: var(--text-tertiary);
 }
 
 /* ============================================
@@ -2575,17 +2578,20 @@ label.attachment-drop-zone.drag-over {
 .task-attachment-count {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1.2;
   color: var(--text-tertiary);
 }
 
 .task-due-badge {
   display: flex;
   align-items: center;
-  gap: 3px;
-  font-size: 0.65rem;
+  gap: 4px;
+  font-size: 0.68rem;
   font-weight: 600;
+  line-height: 1.2;
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -2608,9 +2614,10 @@ label.attachment-drop-zone.drag-over {
 .task-estimate {
   display: flex;
   align-items: center;
-  gap: 3px;
-  font-size: 0.65rem;
+  gap: 4px;
+  font-size: 0.68rem;
   font-weight: 600;
+  line-height: 1.2;
   padding: 2px 6px;
   border-radius: 4px;
   background: var(--tag-bg);
@@ -2620,8 +2627,10 @@ label.attachment-drop-zone.drag-over {
 .task-subtask-count {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1.2;
   color: var(--text-tertiary);
 }
 
